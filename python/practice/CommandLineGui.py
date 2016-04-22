@@ -18,7 +18,7 @@ BACKGROUND_GREEN= 0x20 # background color contains green.
 BACKGROUND_RED = 0x40 # background color contains red.  
 BACKGROUND_INTENSITY = 0x80 # background color is intensified.
 
-class Color(object):  
+class OutputHelper(object):  
     ''''' See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winprog/winprog/windows_api_reference.asp 
     for information on Windows APIs.'''  
     std_out_handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)  
@@ -52,12 +52,16 @@ class Color(object):
         self.set_cmd_color(FOREGROUND_RED | FOREGROUND_INTENSITY| BACKGROUND_BLUE | BACKGROUND_INTENSITY)  
         print print_text  
         self.reset_color() 
+        
+    def display(self, s):
+        os.write(1, s)
+        sys.stdout.flush()
 
 class ProgressBar(object):
     def __init__(self, max):
         self.max = max
         self.current = 0
-        self.color = Color()
+        self.output_helper = OutputHelper()
         
     def progress(self, step):
         if step > 0:
@@ -66,25 +70,32 @@ class ProgressBar(object):
                 self.finishBar()
             else:
                 percent = float(self.current) / float(self.max)                
-                os.write(1, "\r[%s] |%s" % (format(percent, ".0%"), "="*int(percent*50)))
-                sys.stdout.flush()
+                self.output_helper.display("\r[%s] |%s" % (format(percent, ".0%"), "="*int(percent*50)))                
     
     def finished(self):
         return self.current >= self.max
     
     def finishBar(self):
-        os.write(1, "\r[%s] |%s|" % (format(1, ".0%"), "="*50))
-        sys.stdout.flush()
-        self.color.print_green_text("Finished.")
+        self.output_helper.display("\r[%s] |%s|" % (format(1, ".0%"), "="*50))        
+        self.output_helper.print_green_text("Finished.")
 
-
-progressBar = ProgressBar(100)
-progressBar.progress(20)
-time.sleep(1)
-progressBar.progress(20)
-time.sleep(1)
-progressBar.progress(20)
-time.sleep(1)
-progressBar.progress(20)
-time.sleep(1)
-progressBar.progress(20)
+class Menu(object):
+    def __init__(self):
+        self.items = {}
+        self.output_helper = OutputHelper()
+        
+    def load_from_json(self, str):
+        self.items = {}
+    
+    def add_item(self, key, menu_item):
+        self.items[key] = menu_item
+        
+    def show(self):
+        menu_str = ""
+        for (key, item) in self.items.items():
+            menu_str += "\r[%s] %s" % (key, item.text)        
+        self.output_helper.display(menu_str)
+            
+class MenuItem(object):
+    def __init__(self, text):
+        self.text = text
