@@ -52,10 +52,11 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'mysite.urls'
 
+#'DIRS': ["E:/SourceCode/djangotest/mysite/firstApp/templates/",],
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["E:/SourceCode/djangotest/mysite/firstApp/templates/",],
+        'DIRS': [],       
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
