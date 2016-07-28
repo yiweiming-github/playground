@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApEmulator", "ApEmulator\ApEmulator.csproj", "{CF6C1354-BD4C-483B-84C4-87AEB98D3B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispatcherEmulator", "DispatcherEmulator\DispatcherEmulator.csproj", "{73B603DE-29FF-477D-BED9-B1A45C2F03AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerEmulator", "WorkerEmulator\WorkerEmulator.csproj", "{A4406DBB-2907-4612-BBED-F0B7B834C26B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF6C1354-BD4C-483B-84C4-87AEB98D3B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF6C1354-BD4C-483B-84C4-87AEB98D3B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF6C1354-BD4C-483B-84C4-87AEB98D3B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF6C1354-BD4C-483B-84C4-87AEB98D3B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73B603DE-29FF-477D-BED9-B1A45C2F03AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73B603DE-29FF-477D-BED9-B1A45C2F03AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73B603DE-29FF-477D-BED9-B1A45C2F03AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73B603DE-29FF-477D-BED9-B1A45C2F03AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4406DBB-2907-4612-BBED-F0B7B834C26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4406DBB-2907-4612-BBED-F0B7B834C26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4406DBB-2907-4612-BBED-F0B7B834C26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4406DBB-2907-4612-BBED-F0B7B834C26B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
