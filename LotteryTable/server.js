@@ -40,6 +40,10 @@ app.use(function(req, res, next) {
 app.get('/analysis', function(req, res){
   res.sendFile(__dirname + "/public/analysis.html")
 });
+app.get('/stream', function(req, res){
+  res.sendFile(__dirname + "/public/stream.html")
+});
+
 
 app.get('/api/analysis', function(req, res){
   fs.readFile(ANALYSIS_FILE, function(err, data) {
@@ -89,7 +93,39 @@ app.post('/api/comments', function(req, res) {
   });
 });
 
+var http = require('http').createServer(app);
+var io = require('socket.io').listen(http);
+io.on('connection', function(socket)
+{
+    console.log('a user connected');    
+});
 
-app.listen(app.get('port'), function() {
+var amqp = require('amqplib/callback_api');
+amqp.connect('amqp://localhost', function(err, conn)
+{
+    conn.createChannel(function(err, ch)
+    {
+        var q = 'hello';
+
+        ch.assertQueue(q, {durable: false});
+        console.log("waiting for message in %s", q);
+        ch.consume(q, function(msg)
+        {
+            if( msg !== null)
+            {
+                console.log(" received: %s", msg.content.toString());
+                io.emit('chat message', { for: 'everyone' });
+                ch.ack(msg);
+            }
+        });
+    });
+});
+
+
+// app.listen(app.get('port'), function() {
+//   console.log('Server started: http://localhost:' + app.get('port') + '/');
+// });
+
+http.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
