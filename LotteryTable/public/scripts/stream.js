@@ -14,13 +14,29 @@ var MatchTable = React.createClass({
   },
 
   getInitialState: function() {
-    //return {data: [{"date": 19000101,"homeTeam": "team1","awayTeam": "team2","win": 0,"draw": 0,"lose": 0,"predict": 0, "result": 0}]};
-    return {data: []};
+    var socket = io();
+    socket.on('chat message', this.receiveMessage);
+
+    return {
+      data: [],
+      socket: socket
+    };
+  },
+
+  receiveMessage: function(msg) {       
+    // var msgs = this.state.data;
+    // if(msgs.length > 20)
+    // {
+    //   msgs.shift();
+    // }
+    // msgs.push(msg);
+    //this.setState({data: msgs});
+    this.setState({data: msg});
   },
 
   componentDidMount: function() {
     this.loadMatchListFromServer();
-    setInterval(this.loadMatchListFromServer, this.props.pollInterval);
+    //setInterval(this.loadMatchListFromServer, this.props.pollInterval);
   },
 
   render: function() {
@@ -32,7 +48,7 @@ var MatchTable = React.createClass({
   } 
 });
 
-var Match = React.createClass({  
+var Match = React.createClass({
   render: function() {
     return (
       <tr>

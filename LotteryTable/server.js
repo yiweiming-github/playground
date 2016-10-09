@@ -44,6 +44,9 @@ app.get('/stream', function(req, res){
   res.sendFile(__dirname + "/public/stream.html")
 });
 
+// app.get('/server_stream', function(req, res){  
+// });
+
 
 app.get('/api/analysis', function(req, res){
   fs.readFile(ANALYSIS_FILE, function(err, data) {
@@ -105,16 +108,16 @@ amqp.connect('amqp://localhost', function(err, conn)
 {
     conn.createChannel(function(err, ch)
     {
-        var q = 'hello';
+        var q = 'snapshot.market';
 
         ch.assertQueue(q, {durable: false});
         console.log("waiting for message in %s", q);
         ch.consume(q, function(msg)
         {
             if( msg !== null)
-            {
+            {                
+                io.emit('chat message', JSON.parse(msg.content));
                 console.log(" received: %s", msg.content.toString());
-                io.emit('chat message', { for: 'everyone' });
                 ch.ack(msg);
             }
         });
