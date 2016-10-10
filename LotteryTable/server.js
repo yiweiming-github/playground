@@ -116,7 +116,7 @@ amqp.connect('amqp://localhost', function(err, conn)
         {
             if( msg !== null)
             {                
-                io.emit('chat message', JSON.parse(msg.content));
+                io.emit('market_quote', JSON.parse(msg.content));
                 console.log(" received: %s", msg.content.toString());
                 ch.ack(msg);
             }

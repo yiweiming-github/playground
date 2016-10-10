@@ -1,4 +1,4 @@
-var MatchTable = React.createClass({
+var MarketTable = React.createClass({
   loadMatchListFromServer: function() {
     $.ajax({
       url: this.props.url,
@@ -15,7 +15,7 @@ var MatchTable = React.createClass({
 
   getInitialState: function() {
     var socket = io();
-    socket.on('chat message', this.receiveMessage);
+    socket.on('market_quote', this.receiveMessage);
 
     return {
       data: [],
@@ -23,54 +23,47 @@ var MatchTable = React.createClass({
     };
   },
 
-  receiveMessage: function(msg) {       
-    // var msgs = this.state.data;
-    // if(msgs.length > 20)
-    // {
-    //   msgs.shift();
-    // }
-    // msgs.push(msg);
-    //this.setState({data: msgs});
+  receiveMessage: function(msg) {      
+    
     this.setState({data: msg});
   },
 
   componentDidMount: function() {
-    this.loadMatchListFromServer();
-    //setInterval(this.loadMatchListFromServer, this.props.pollInterval);
+    //this.loadMatchListFromServer();
+    //this.setState({data: JSON.parse('[{"date":"", "seq":-1, "time":"", "ask":-999.9, "bid": -999.9, "mid": -999.9}]')})    
   },
 
   render: function() {
     return (
       <div>        
-        <MatchList matches={this.state.data}/>                
+        <MarketQuoteList quotes={this.state.data}/>                
       </div>
     );
   } 
 });
 
-var Match = React.createClass({
+var MarketQuote = React.createClass({
   render: function() {
     return (
       <tr>
         <td>{this.props.date}</td>
-        <td>{this.props.homeTeam}</td>
-        <td>{this.props.awayTeam}</td>
-        <td>{this.props.win}</td>
-        <td>{this.props.draw}</td>
-        <td>{this.props.lose}</td>
-        <td>{this.props.predict}</td>
-        <td>{this.props.result}</td>
+        <td>{this.props.seq}</td>
+        <td>{this.props.time}</td>
+        <td>{this.props.code}</td>
+        <td>{this.props.ask}</td>
+        <td>{this.props.bid}</td>
+        <td>{this.props.mid}</td>        
       </tr>
     );
   }
 });
 
-var MatchList = React.createClass({
+var MarketQuoteList = React.createClass({
   render: function() {    
-    var matches = this.props.matches.map(function(matchItem) {      
+    var quotes = this.props.quotes.map(function(marketQuote) {      
       return (
-        <Match date={matchItem.date} homeTeam={matchItem.homeTeam} awayTeam={matchItem.awayTeam} win={matchItem.win} 
-        draw={matchItem.draw} lose={matchItem.lose} predict={matchItem.predict} result={matchItem.result}/>
+        <MarketQuote date={marketQuote.date} seq={marketQuote.seq} time={marketQuote.time} code={marketQuote.code} ask={marketQuote.ask} 
+        bid={marketQuote.bid} mid={marketQuote.mid}/>
       );
     });
 
@@ -78,21 +71,20 @@ var MatchList = React.createClass({
       <table>
         <tr>
           <th>Date</th>
-          <th>Home Team</th>
-          <th>Away Team</th>
-          <th>Win</th>
-          <th>Draw</th>
-          <th>Lose</th>
-          <th>Predict</th>
-          <th>Result</th>
+          <th>Seq</th>
+          <th>Time</th>
+          <th>Code</th>
+          <th>Ask</th>
+          <th>Bid</th>
+          <th>Mid</th>          
         </tr>
-        {matches}
+        {quotes}
       </table>
     );    
   }
 });
 
 ReactDOM.render(
-  <MatchTable url="/api/analysis" pollInterval={5000}/>,
+  <MarketTable url="/api/analysis" pollInterval={5000}/>,
   document.getElementById('content')
 );
