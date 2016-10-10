@@ -43,7 +43,9 @@ app.get('/analysis', function(req, res){
 app.get('/stream', function(req, res){
   res.sendFile(__dirname + "/public/stream.html")
 });
-
+app.get('/test', function(req, res){
+  res.sendFile(__dirname + "/public/reactbootstraptest.html")
+});
 // app.get('/server_stream', function(req, res){  
 // });
 

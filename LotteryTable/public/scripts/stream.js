@@ -1,3 +1,6 @@
+var ReactBootstrap = require('react-bootstrap');
+var Table = ReactBootstrap.Table;
+
 var MarketTable = React.createClass({
   loadMatchListFromServer: function() {
     $.ajax({
@@ -68,7 +71,8 @@ var MarketQuoteList = React.createClass({
     });
 
     return (
-      <table>
+      <Table striped bordered condensed hover>
+        <thead>
         <tr>
           <th>Date</th>
           <th>Seq</th>
@@ -78,8 +82,11 @@ var MarketQuoteList = React.createClass({
           <th>Bid</th>
           <th>Mid</th>          
         </tr>
+        </thead>
+        <tbody>
         {quotes}
-      </table>
+        </tbody>
+      </Table>
     );    
   }
 });

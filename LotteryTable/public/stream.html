@@ -10,17 +10,18 @@
     <script src="scripts/libs/babel.min.js"></script>
     <script src="scripts/libs/jquery.min.js"></script>
     <script src="scripts/libs/remarkable.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>          
+    <script src="/socket.io/socket.io.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/react/<react-version>/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/<react-version>/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/<version>/react-bootstrap.min.js"></script>-->
+    <link rel="stylesheet" href="css/bootstrap_css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap_css/bootstrap-theme.min.css">     
     <!--<script>
-        var socket = io();
-        socket.on('chat message', function(msg)
-        {          
-          alert('client got msg: ' + msg.toString());
-        });
-    </script>    -->
+        var Table = ReactBootstrap.Table;
+    </script>-->
   </head>
   <body>
     <div id="content"></div>
-    <script type="text/babel" src="scripts/stream.js"></script>    
+    <script type="text/javascript" src="scripts/stream.bundle.js"></script>    
   </body>
 </html>
