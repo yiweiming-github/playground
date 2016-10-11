@@ -6,32 +6,46 @@ var Col = ReactBootstrap.Col;
 var Checkbox = ReactBootstrap.Checkbox;
 
 var BondListPanel = React.createClass({
-    getInitialState: function(){
+    loadBondListFromServer: function () {
+        $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            cache: false,
+            success: function (responseData) {
+                this.setState({ bonds: responseData });
+            }.bind(this),
+            error: function (xhr, status, err) {
+                console.error(this.props.url, status, err.toString());
+            }.bind(this)
+        });
+    },
+
+    getInitialState: function () {
         return {
-            bonds: [
-            {'code':'test1', 'coupon':0.03, 'maturity': '2016-10-20', 'type': 'Gov', 'rating': 'AAA'},
-            {'code':'test2', 'coupon':0.025, 'maturity': '2016-12-20', 'type': 'Gov', 'rating': 'AAA'},
-            {'code':'test3', 'coupon':0.035, 'maturity': '2016-10-20', 'type': 'Corp', 'rating': 'AAA'}
-            ]
+            bonds: []
         }
     },
 
-    render : function(){
+    componentDidMount: function() {
+        this.loadBondListFromServer();
+    },
+
+    render: function () {
         return (
             <Grid>
-                <Row>                
+                <Row>
                     <Col mdOffset={2} md={8}><BondFilterPanel/></Col>
                 </Row>
                 <Row>
                     <Col mdOffset={2} md={8}><BondList bonds={this.state.bonds}/></Col>
                 </Row>
-            </Grid>            
+            </Grid>
         );
     }
 });
 
 var BondFilterPanel = React.createClass({
-    render : function(){
+    render: function () {
         return (
             <Grid>
                 <Row>
@@ -45,8 +59,8 @@ var BondFilterPanel = React.createClass({
 });
 
 var BondList = React.createClass({
-    render : function(){
-        var bonds = this.props.bonds.map(function(bond){
+    render: function () {
+        var bonds = this.props.bonds.map(function (bond) {
             return (
                 <BondRow code={bond.code} coupon={bond.coupon} maturity={bond.maturity} type={bond.type} rating={bond.rating}/>
             );
@@ -63,28 +77,28 @@ var BondList = React.createClass({
                     </tr>
                 </thead>
                 <tbody>
-                {bonds}
-                </tbody>                
+                    {bonds}
+                </tbody>
             </Table>
         );
     }
 });
 
 var BondRow = React.createClass({
-    render : function(){
+    render: function () {
         return (
             <tr>
                 <td>{this.props.code}</td>
                 <td>{this.props.coupon}</td>
                 <td>{this.props.maturity}</td>
                 <td>{this.props.type}</td>
-                <td>{this.props.rating}</td>                        
+                <td>{this.props.rating}</td>
             </tr>
         );
     }
 });
 
 ReactDOM.render(
-  <BondListPanel/>,
-  document.getElementById('content')
+    <BondListPanel url="/api/bondlist"/>,
+    document.getElementById('content')
 );
