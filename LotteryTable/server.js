@@ -46,6 +46,9 @@ app.get('/stream', function(req, res){
 app.get('/test', function(req, res){
   res.sendFile(__dirname + "/public/reactbootstraptest.html")
 });
+app.get('/bondlist', function(req, res){
+  res.sendFile(__dirname + "/public/bondlist.html")
+});
 // app.get('/server_stream', function(req, res){  
 // });
 
