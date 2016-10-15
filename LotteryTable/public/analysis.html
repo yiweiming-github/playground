@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello Analysis</title>
+    <!-- Not present in the tutorial. Just for basic styling. -->
+    <link rel="stylesheet" href="css/base.css" />
+    <script src="scripts/libs/react.js"></script>
+    <script src="scripts/libs/react-dom.js"></script>
+    <script src="scripts/libs/babel.min.js"></script>
+    <script src="scripts/libs/jquery.min.js"></script>
+    <script src="scripts/libs/remarkable.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>          
+    <script>
+        var socket = io();
+        socket.on('chat message', function(msg)
+        {          
+          alert('client got msg: ' + msg.toString());
+        });
+    </script>    
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel" src="scripts/analysis.js"></script>    
+  </body>
+</html>
