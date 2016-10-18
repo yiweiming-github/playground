@@ -49,12 +49,25 @@ var BondFilterPanel = React.createClass({
         return (
             <Grid>
                 <Row>
-                    <Col md={1}><Checkbox checked>All</Checkbox></Col>
-                    <Col md={1}><Checkbox>Gov</Checkbox></Col>
-                    <Col md={1}><Checkbox>Corp</Checkbox></Col>
+                    <BondFilter condition="All"/>
+                    <BondFilter condition="Gov"/>
+                    <BondFilter condition="Corp"/>
                 </Row>
             </Grid>
         );
+    },    
+});
+
+var BondFilter = React.createClass({
+    render: function () {
+        var onClickEvent = this.clickHandler.bind(this, this.props.condition);        
+        return (
+            <Col md={1}><Checkbox onClick={onClickEvent}>{this.props.condition}</Checkbox></Col>
+        );
+    },
+
+    clickHandler: function (condition){
+        this.dispatchEvent('filterBonds', condition);
     }
 });
 

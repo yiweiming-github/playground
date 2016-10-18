@@ -72,7 +72,7 @@ app.get('/api/bondlist', function(req, res){
       console.error(err);
       process.exit(1);
     }
-    var jsonObj = JSON.parse(data);    
+    var jsonObj = JSON.parse(data);
     res.json(jsonObj.slice(0, 10));
   })
 });
