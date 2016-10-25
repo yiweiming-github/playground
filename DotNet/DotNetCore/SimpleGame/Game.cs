@@ -31,9 +31,18 @@ namespace SimpleGame
             if (board.Winner > 0)
             {
                 _isEnd = true;
+                _winner = (board.Winner == _player1.Id) ? _player1 : _player2;
             }
 
             _nextMovePlayer = (_nextMovePlayer.Id == 1) ? _player2 : _player1;
+        }
+
+        public Player Winner
+        {
+            get 
+            {
+                return _winner;
+            }
         }
 
         public override string ToString()
