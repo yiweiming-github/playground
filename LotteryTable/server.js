@@ -19,6 +19,7 @@ var app = express();
 
 var COMMENTS_FILE = path.join(__dirname, 'comments.json');
 var ANALYSIS_FILE = path.join(__dirname, 'analysis.json');
+var BONDLIST_FILE = path.join(__dirname, 'bondlist.json');
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -46,6 +47,9 @@ app.get('/stream', function(req, res){
 app.get('/test', function(req, res){
   res.sendFile(__dirname + "/public/reactbootstraptest.html")
 });
+app.get('/bondlist', function(req, res){
+  res.sendFile(__dirname + "/public/bondlist.html")
+});
 // app.get('/server_stream', function(req, res){  
 // });
 
@@ -59,6 +63,17 @@ app.get('/api/analysis', function(req, res){
     var jsonStr = JSON.parse(data);
     //console.log(jsonStr);
     res.json(jsonStr);
+  })
+});
+
+app.get('/api/bondlist', function(req, res){
+  fs.readFile(BONDLIST_FILE, function(err, data) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    var jsonObj = JSON.parse(data);
+    res.json(jsonObj.slice(0, 10));
   })
 });
 
