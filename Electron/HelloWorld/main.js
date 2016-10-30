@@ -1,10 +1,8 @@
 const {app, BrowserWindow} = require('electron')
 const {ipcMain} = require('electron')
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+
 let win
-let child1
-let child2
+let childWindows
 let currentTicker
 
 function createWindow () {
@@ -18,7 +16,7 @@ function createWindow () {
   })
 
   win.loadURL(`file://${__dirname}/index.html`)
-  win.show()  
+  win.show() 
 
   // Open the DevTools.
   //win.webContents.openDevTools()
@@ -39,41 +37,32 @@ app.on('ready', () => {
   createWindow()
 
   ipcMain.on('open-window', (event, arg) => {
-    if (arg === 'child1') {
-      if (!child1) {
-        child1 = new BrowserWindow({
+    if (!childWindows) {
+      childWindows = {}
+    }
+      if (!childWindows[arg]) {
+        childWindows[arg] = new BrowserWindow({
           parent: win,
           width: 400, 
           height: 300,
         })
-        child1.loadURL(`file://${__dirname}/child1.html`)
-        child1.on('closed', () => {
-          child1 = null
+        childWindows[arg].loadURL(`file://${__dirname}/` + arg + '.html')
+        childWindows[arg].on('closed', () => {
+          childWindows[arg] = null
         })  
       }
-      child1.show()
-    }
-    else if(arg === 'child2') {
-      if (!child2) {
-        child2 = new BrowserWindow({
-          parent: win,    
-          width: 400, 
-          height: 300,    
-        })
-        child2.loadURL(`file://${__dirname}/child2.html`)
-        child2.on('closed', () => {
-          child2 = null
-        })
-      }
-      child2.show()
-    }
+      childWindows[arg].show()
   })
 
   ipcMain.on('change-ticker', (event, arg) => {
     currentTicker = arg
-    if (child2) {
-      child2.webContents.send('change-ticker', currentTicker)
-    }    
+    if (childWindows) {
+      for (var index in childWindows) {
+        if (childWindows[index]) {
+          childWindows[index].webContents.send('change-ticker', currentTicker)
+        }
+      }
+    }
   })
 
   ipcMain.on('query-ticker', (event, arg) => {
