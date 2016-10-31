@@ -1,3 +1,7 @@
+//var ReactBootstrap = require('../../node_modules/react-bootstrap');
+var ReactBootstrap = require('react-bootstrap');
+var Button = ReactBootstrap.Button;
+
 var MatchTable = React.createClass({
   loadMatchListFromServer: function() {
     $.ajax({
@@ -59,7 +63,8 @@ var MatchList = React.createClass({
     });
 
     return (
-      <table>
+      <div>
+      <table striped bordered condensed hover>
         <tr>
           <th>Date</th>
           <th>Home Team</th>
@@ -72,6 +77,17 @@ var MatchList = React.createClass({
         </tr>
         {matches}
       </table>
+
+          
+        <Button>Default</Button>    
+    <Button bsStyle="primary">Primary</Button>
+    <Button bsStyle="success">Success</Button>
+    <Button bsStyle="info">Info</Button>
+    <Button bsStyle="warning">Warning</Button>
+    <Button bsStyle="danger">Danger</Button>
+    <Button bsStyle="link">Link</Button>
+  
+      </div>
     );    
   }
 });

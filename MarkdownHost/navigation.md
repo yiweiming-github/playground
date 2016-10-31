@@ -1,19 +1,13 @@
 [gimmick:theme](cosmo)
-[gimmick:themechooser](Choose theme)
 
-[Home](index.md)
-[Menu]()
+[主页](index.md)
+[API文档]()
 
-  * # 中文测试
-  * [Zmq1](ZmqNotes.md)
+  * # API文档示例
+  * [RESTful](REST_API_Doc_Sample.md)
+  * [Qpid](Qpid_API_Doc_Sample.md)
   - - - -
-  * [QDP1](QB_QDP_field_mapping.md)
-  - - - -
-  * [Zmq2](ZmqNotes.md)
-  * [QDP2](QB_QDP_field_mapping.md)
-  - - - -
-  * # SubMenu Heading 3
-  * [QDP3](QB_QDP_field_mapping.md)
 
-[Zmq](ZmqNotes.md)
-[QDP](QB_QDP_field_mapping.md)
+[API目录](API_Reference.md)
+
+[gimmick:themechooser](修改风格)

@@ -32,8 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atomic">
+      <HintPath>..\References\Atomic.dll</HintPath>
+    </Reference>
     <Reference Include="clrzmq">
       <HintPath>..\References\clrzmq.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor">
+      <HintPath>..\References\Disruptor.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor.Scheduler">
+      <HintPath>..\References\Disruptor.Scheduler.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,7 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DispatcherEmulator.cs" />
+    <Compile Include="DispatcherMultithreadNoLock.cs" />
+    <Compile Include="DispatcherMultithreadWithLock.cs" />
     <Compile Include="DispatcherNoLock.cs" />
+    <Compile Include="DispatcherWithDisruptor.cs" />
     <Compile Include="DispatcherWithLock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

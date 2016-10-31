@@ -10,7 +10,7 @@ namespace DispatcherEmulator
     {
         static void Main(string[] args)
         {
-            var dispatcher = new DispatcherWithLock();
+            var dispatcher = new DispatcherMultithreadWithLock();
             dispatcher.Run();
         }
     }

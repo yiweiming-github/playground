@@ -14,8 +14,8 @@ namespace ApEmulator
         {
             var msg = new ZmqMessage();
             msg.Append(new Frame(new byte[128]));
-            var msgCount = 10000;
-            var msgCountPerSec = msgCount/1000;
+            var msgCount = 1000;
+            var msgCountPerSec = msgCount/100;
             using(var context = ZmqContext.Create())
             using (var publisher = context.CreateSocket(SocketType.PUB))
             {
