@@ -19,6 +19,7 @@ var app = express();
 
 var COMMENTS_FILE = path.join(__dirname, 'comments.json');
 var ANALYSIS_FILE = path.join(__dirname, 'analysis.json');
+var BONDLIST_FILE = path.join(__dirname, 'bondlist.json');
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -40,6 +41,18 @@ app.use(function(req, res, next) {
 app.get('/analysis', function(req, res){
   res.sendFile(__dirname + "/public/analysis.html")
 });
+app.get('/stream', function(req, res){
+  res.sendFile(__dirname + "/public/stream.html")
+});
+app.get('/test', function(req, res){
+  res.sendFile(__dirname + "/public/reactbootstraptest.html")
+});
+app.get('/bondlist', function(req, res){
+  res.sendFile(__dirname + "/public/bondlist.html")
+});
+// app.get('/server_stream', function(req, res){  
+// });
+
 
 app.get('/api/analysis', function(req, res){
   fs.readFile(ANALYSIS_FILE, function(err, data) {
@@ -50,6 +63,17 @@ app.get('/api/analysis', function(req, res){
     var jsonStr = JSON.parse(data);
     //console.log(jsonStr);
     res.json(jsonStr);
+  })
+});
+
+app.get('/api/bondlist', function(req, res){
+  fs.readFile(BONDLIST_FILE, function(err, data) {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    var jsonObj = JSON.parse(data);
+    res.json(jsonObj.slice(0, 10));
   })
 });
 
@@ -89,7 +113,39 @@ app.post('/api/comments', function(req, res) {
   });
 });
 
+var http = require('http').createServer(app);
+var io = require('socket.io').listen(http);
+io.on('connection', function(socket)
+{
+    console.log('a user connected');    
+});
 
-app.listen(app.get('port'), function() {
+var amqp = require('amqplib/callback_api');
+amqp.connect('amqp://localhost', function(err, conn)
+{
+    conn.createChannel(function(err, ch)
+    {
+        var q = 'snapshot.market';
+
+        ch.assertQueue(q, {durable: false});
+        console.log("waiting for message in %s", q);
+        ch.consume(q, function(msg)
+        {
+            if( msg !== null)
+            {                
+                io.emit('market_quote', JSON.parse(msg.content));
+                console.log(" received: %s", msg.content.toString());
+                ch.ack(msg);
+            }
+        });
+    });
+});
+
+
+// app.listen(app.get('port'), function() {
+//   console.log('Server started: http://localhost:' + app.get('port') + '/');
+// });
+
+http.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
