@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <h1>This is main window. Please choose child window to open.</h1>
+    <script type="text/javascript">
+      const ipc = require('electron').ipcRenderer; 
+      function OpenChild(name){
+        ipc.send("open-window", name)
+      }      
+    </script>
+    <input type="button" onclick="OpenChild('child1')" value="Child1"/>
+    <input type="button" onclick="OpenChild('child2')" value="Child2"/>
+  </body>
+</html>
+
