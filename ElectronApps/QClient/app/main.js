@@ -5,7 +5,7 @@ import shortcut from "electron-localshortcut";
 import windowState from "./src/windowState";
 import AppConfig from "./src/appConfig";
 import ConfigStorage from "./src/configStorage";
-import QBrowseWindow from "./src/QBrowseWindow"
+import QMainWindow from "./src/QMainWindow";
 require( "electron-debug" )();
 
 const appPath = path.resolve( path.join( __dirname, "./" ) );
@@ -57,7 +57,7 @@ let mainWindow;
 // };
 
 const createWindow = () => {
-	mainWindow = new QBrowserWindow({
+	mainWindow = new QMainWindow({
 		width: 800, 
     	height: 600,
     	autoHideMemuBar: true,
@@ -68,23 +68,23 @@ const createWindow = () => {
 
 	mainWindow.on( "closed", () => {
 		mainWindow = null;
-	} );
+	});
 	mainWindow.on("ready-to-show", () => {
 		mainWindow.show();
-	})
+	});
 
-	// if ( mainWindowState.isMaximized ) {
-	// 	mainWindow.maximize();
-	// }
+	var childWindow1 = mainWindow.createChildWindow('child1', {
+		width: 400, 
+    	height: 300,
+    	autoHideMemuBar: true,
+    	titleBarStyle: 'hidden'
+	});
 
-	// mainWindow.loadURL( `file://${ urlPath }` );
-	// // mainWindow.webContents.openDevTools();
-
-	// mainWindow.on( "close", function() {
-	// 	mainWindowState.saveState( mainWindow );
-	// } );
-
-	
+	childWindow1.loadURL('http://www.baidu.com');
+	childWindow1.regiesterEventHandler('ticker-change', (event, arg) => {
+		console.log('child1 got ticker-change event');
+	});
+	childWindow1.show();	
 
 	//initMenus();
 };
