@@ -20,75 +20,73 @@ if ( isDevMode === true ) {
 const store = new ConfigStorage( null, true, app.getPath( "userData" ) );
 const appConfig = new AppConfig( store );
 
-let testWindow = new QBrowseWindow('name', 'url');
-
 let mainWindow;
-const mainWindowState = windowState( "main", {
-	width: 800,
-	height: 600
-} );
+// const initMenus = () => {
+// 	if ( os.platform() === "darwin" ) {
+// 		const template = [ {
+// 			label: "Application",
+// 			submenu: [
+// 				{ label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+// 				{ type: "separator" },
+// 				{ label: "Preferences", accelerator: "CmdOrCtrl+,", click: () => {
+// 					mainWindow.webContents.send( "open-settings" );
+// 				} },
+// 				{ type: "separator" },
+// 				{ label: "Quit", accelerator: "Command+Q", click: () => {
+// 					app.quit();
+// 				} }
+// 			] }, {
+// 				label: "Edit",
+// 				submenu: [
+// 					{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+// 					{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+// 					{ type: "separator" },
+// 					{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+// 					{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+// 					{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+// 					{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+// 				] }
+// 			];
 
-const initMenus = () => {
-	if ( os.platform() === "darwin" ) {
-		const template = [ {
-			label: "Application",
-			submenu: [
-				{ label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-				{ type: "separator" },
-				{ label: "Preferences", accelerator: "CmdOrCtrl+,", click: () => {
-					mainWindow.webContents.send( "open-settings" );
-				} },
-				{ type: "separator" },
-				{ label: "Quit", accelerator: "Command+Q", click: () => {
-					app.quit();
-				} }
-			] }, {
-				label: "Edit",
-				submenu: [
-					{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-					{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-					{ type: "separator" },
-					{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-					{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-					{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-					{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-				] }
-			];
-
-		Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
-	} else {
-		shortcut.register( mainWindow, "Ctrl+,", () => {
-			mainWindow.webContents.send( "open-settings" );
-		} );
-	}
-};
+// 		Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
+// 	} else {
+// 		shortcut.register( mainWindow, "Ctrl+,", () => {
+// 			mainWindow.webContents.send( "open-settings" );
+// 		} );
+// 	}
+// };
 
 const createWindow = () => {
-	mainWindow = new BrowserWindow( {
-		x: mainWindowState.x,
-		y: mainWindowState.y,
-		width: mainWindowState.width,
-		height: mainWindowState.height,
-		minWidth: 600,
-		minHeight: 400
-	} );
+	mainWindow = new QBrowserWindow({
+		width: 800, 
+    	height: 600,
+    	autoHideMemuBar: true,
+    	titleBarStyle: 'hidden'
+	});	
 
-	if ( mainWindowState.isMaximized ) {
-		mainWindow.maximize();
-	}
-
-	mainWindow.loadURL( `file://${ urlPath }` );
-	// mainWindow.webContents.openDevTools();
-
-	mainWindow.on( "close", function() {
-		mainWindowState.saveState( mainWindow );
-	} );
+	mainWindow.loadURL( `file://${ urlPath }` );	
 
 	mainWindow.on( "closed", () => {
 		mainWindow = null;
 	} );
+	mainWindow.on("ready-to-show", () => {
+		mainWindow.show();
+	})
 
-	initMenus();
+	// if ( mainWindowState.isMaximized ) {
+	// 	mainWindow.maximize();
+	// }
+
+	// mainWindow.loadURL( `file://${ urlPath }` );
+	// // mainWindow.webContents.openDevTools();
+
+	// mainWindow.on( "close", function() {
+	// 	mainWindowState.saveState( mainWindow );
+	// } );
+
+	
+
+	//initMenus();
 };
 
 app.on( "ready", createWindow );
