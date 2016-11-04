@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Child 2</title>
+  </head>
+  <script type="text/javascript">
+    const ipcRenderer = require('electron').ipcRenderer;    
+
+    ipcRenderer.on('publish-ticker-change', (event, arg) => {
+        document.getElementById("ticker").innerHTML = arg        
+    })
+
+    function load(){        
+        ipcRenderer.send('query-ticker')
+    }
+  </script>
+  <body onload="load()">
+    <h1>This is child window 2</h1>
+    <p id="ticker">Unknown</p>
+  </body>
+</html>

@@ -33,8 +33,8 @@ export default class QMainWindow extends QBrowserWindow {
         if (this.childWindows[name]) {
             if (!this.eventRegistration[topic]) {
                 this.eventRegistration[topic] = [];
-            }
-            this.eventRegistration[topic].push(name);
+            }            
+            this.eventRegistration[topic].push(name);            
         }
     }
 
@@ -52,9 +52,9 @@ export default class QMainWindow extends QBrowserWindow {
     }
 
     publishEvents(topic, content) {
-        if (this.eventRegistration[topic]) {
-            for (var name in this.eventRegistration[topic]) {
-                this.childWindows[name].webContents.send(topic, content);
+        if (this.eventRegistration[topic]) {            
+            for (var name in this.eventRegistration[topic]) {                      
+                this.childWindows[this.eventRegistration[topic][name]].webContents().send(topic, content);
             }
         }
     }

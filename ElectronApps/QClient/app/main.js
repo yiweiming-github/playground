@@ -9,7 +9,7 @@ import QMainWindow from "./src/QMainWindow";
 require( "electron-debug" )();
 
 const appPath = path.resolve( path.join( __dirname, "./" ) );
-const urlPath = path.join( appPath, "index.html" );
+const publicFolder = path.join( appPath, "/public" );
 
 const isDevMode = !!process.execPath.match( /[\\\/]electron[\\\/]dist[\\\/]Electron\.app[\\\/]/ );
 if ( isDevMode === true ) {
@@ -64,13 +64,17 @@ const createWindow = () => {
     	titleBarStyle: 'hidden'
 	});	
 
-	mainWindow.loadURL( `file://${ urlPath }` );	
+	mainWindow.loadURL( `file://${ appPath }` + '/index.html' );	
 
 	mainWindow.on( "closed", () => {
 		mainWindow = null;
 	});
 	mainWindow.on("ready-to-show", () => {
 		mainWindow.show();
+	});
+
+	mainWindow.registerMainEvent('main-ticker-change', (event, arg) => {
+		mainWindow.publishEvents('publish-ticker-change', arg);
 	});
 
 	var childWindow1 = mainWindow.createChildWindow('child1', {
@@ -80,11 +84,24 @@ const createWindow = () => {
     	titleBarStyle: 'hidden'
 	});
 
-	childWindow1.loadURL('http://www.baidu.com');
-	childWindow1.regiesterEventHandler('ticker-change', (event, arg) => {
-		console.log('child1 got ticker-change event');
+	childWindow1.loadURL(`file://${publicFolder}` + '/child1.html');
+	// childWindow1.registerEventHandler('publish-ticker-change', (event, arg) => {
+	// 	console.log('child1 got ticker-change event');
+	// });
+	childWindow1.show();
+
+	var childWindow2 = mainWindow.createChildWindow('child2', {
+		width: 400, 
+    	height: 300,
+    	autoHideMemuBar: true,
+    	titleBarStyle: 'hidden'
 	});
-	childWindow1.show();	
+
+	childWindow2.loadURL(`file://${publicFolder}` + '/child2.html');
+	childWindow2.registerEventHandler('publish-ticker-change', (event, arg) => {
+		console.log('child2 got ticker-change event');
+	});
+	childWindow2.show();
 
 	//initMenus();
 };

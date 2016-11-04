@@ -9,7 +9,7 @@
   "main": "app/main.js",
   "scripts": {
     "eslint": "eslint --fix .",
-    "start": "electron .",
+    "start": "electron . -debug=5858",
     "package": "node tasks/package.js",
     "test": "electron-mocha --compilers js:babel-core/register --reporter spec ./spec/*.spec.js --require ./spec/helpers/setup.js --colors"
   },
