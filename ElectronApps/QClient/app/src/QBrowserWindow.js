@@ -1,5 +1,4 @@
 import {BrowserWindow} from "electron";
-const ipcRenderer = require('electron').ipcRenderer;
 
 //BrowseWindow in Electron is a wrapper of native C++ class,
 //so Electron team decided not to make it inheritable.
@@ -13,15 +12,13 @@ export default class QBrowserWindow {
     }
 
     //Extended functions
-    registerEventHandler(topic, handler) {
+    registerEventSubscription(topic) {
         if (this.parentWindow) {
-            this.parentWindow.registerEventSubscription(topic, this.name);
-            //TODO: undefined error here!!!
-            //ipcRenderer.on(topic, handler);
+            this.parentWindow.registerEventSubscription(topic, this.name);            
         }
     }
 
-    removeEventHandler(topic) {
+    removeEventSubscription(topic) {
         if (this.parentWindow) {
             this.parentWindow.removeEventSubscription(topic, this.name);
         }

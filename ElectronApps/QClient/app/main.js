@@ -84,10 +84,7 @@ const createWindow = () => {
     	titleBarStyle: 'hidden'
 	});
 
-	childWindow1.loadURL(`file://${publicFolder}` + '/child1.html');
-	// childWindow1.registerEventHandler('publish-ticker-change', (event, arg) => {
-	// 	console.log('child1 got ticker-change event');
-	// });
+	childWindow1.loadURL(`file://${publicFolder}` + '/child1.html');	
 	childWindow1.show();
 
 	var childWindow2 = mainWindow.createChildWindow('child2', {
@@ -98,9 +95,7 @@ const createWindow = () => {
 	});
 
 	childWindow2.loadURL(`file://${publicFolder}` + '/child2.html');
-	childWindow2.registerEventHandler('publish-ticker-change', (event, arg) => {
-		console.log('child2 got ticker-change event');
-	});
+	childWindow2.registerEventSubscription('publish-ticker-change');
 	childWindow2.show();
 
 	//initMenus();
