@@ -10,7 +10,7 @@ export default class QMainWindow extends QBrowserWindow {
 
     createChildWindow(name, setting) {
         if (this.childWindows[name]) {
-            closeChildWindow(name);
+            this.closeChildWindow(name);
         }
         var win = new QBrowserWindow(name, setting, this);
         this.childWindows[name] = win;
@@ -20,8 +20,10 @@ export default class QMainWindow extends QBrowserWindow {
 
     closeChildWindow(name) {
         if (this.childWindows[name]) {
-            this.childWindows[name].close();
-            this.childWindows.remove(name);
+            if (!this.childWindows[name].isDestroyed()) {
+                this.childWindows[name].close();
+            }            
+            this.childWindows.splice(name, 1);
         }
     }
 

@@ -21,40 +21,6 @@ const store = new ConfigStorage( null, true, app.getPath( "userData" ) );
 const appConfig = new AppConfig( store );
 
 let mainWindow;
-// const initMenus = () => {
-// 	if ( os.platform() === "darwin" ) {
-// 		const template = [ {
-// 			label: "Application",
-// 			submenu: [
-// 				{ label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-// 				{ type: "separator" },
-// 				{ label: "Preferences", accelerator: "CmdOrCtrl+,", click: () => {
-// 					mainWindow.webContents.send( "open-settings" );
-// 				} },
-// 				{ type: "separator" },
-// 				{ label: "Quit", accelerator: "Command+Q", click: () => {
-// 					app.quit();
-// 				} }
-// 			] }, {
-// 				label: "Edit",
-// 				submenu: [
-// 					{ label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-// 					{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-// 					{ type: "separator" },
-// 					{ label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-// 					{ label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-// 					{ label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-// 					{ label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-// 				] }
-// 			];
-
-// 		Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
-// 	} else {
-// 		shortcut.register( mainWindow, "Ctrl+,", () => {
-// 			mainWindow.webContents.send( "open-settings" );
-// 		} );
-// 	}
-// };
 
 const createWindow = () => {
 	mainWindow = new QMainWindow({
@@ -77,6 +43,12 @@ const createWindow = () => {
 		mainWindow.publishEvents('publish-ticker-change', arg);
 	});
 
+	mainWindow.registerMainEvent('main-open-default-layout', (event, arg) => {
+		openDefaultLayout();
+	});
+};
+
+const openDefaultLayout = () => {
 	var childWindow1 = mainWindow.createChildWindow('child1', {
 		width: 400, 
     	height: 300,
@@ -97,8 +69,6 @@ const createWindow = () => {
 	childWindow2.loadURL(`file://${publicFolder}` + '/child2.html');
 	childWindow2.registerEventSubscription('publish-ticker-change');
 	childWindow2.show();
-
-	//initMenus();
 };
 
 app.on( "ready", createWindow );

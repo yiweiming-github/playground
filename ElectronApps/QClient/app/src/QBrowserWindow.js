@@ -9,6 +9,12 @@ export default class QBrowserWindow {
         this.electronWindow = new BrowserWindow(setting);
         this.name = name;
         this.parentWindow = parent;
+
+        this.electronWindow.on ('closed', () => {
+            if (this.parentWindow) {
+                this.parentWindow.closeChildWindow(this.name);
+            }
+        });
     }
 
     //Extended functions
