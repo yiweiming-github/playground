@@ -60,4 +60,19 @@ export default class QMainWindow extends QBrowserWindow {
             }
         }
     }
+
+    saveChildWindowConfig(windowConfig) {
+        for (var i in windowConfig) {
+             if (this.childWindows[windowConfig[i].name]) {
+                var pos = this.childWindows[windowConfig[i].name].getPosition();
+                var size = this.childWindows[windowConfig[i].name].getSize();
+                windowConfig[i].x = pos[0];
+                windowConfig[i].y = pos[1];
+                windowConfig[i].width = size[0];
+                windowConfig[i].height = size[1];
+            }
+        }
+        
+        return windowConfig;
+    }
 }

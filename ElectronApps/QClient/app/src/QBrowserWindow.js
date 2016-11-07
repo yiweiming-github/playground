@@ -34,6 +34,10 @@ export default class QBrowserWindow {
         ipcRenderer.send(topic, content);
     }
 
+    name() {
+        return this.name;
+    }
+
     //To wrap BrowseWindow, have to expose its members
     webContents() {
         return this.electronWindow.webContents;
@@ -166,6 +170,10 @@ export default class QBrowserWindow {
 
 
     //////////////////////////////////
+
+    getPosition() {
+        return this.electronWindow.getPosition();
+    }
 
     loadURL(url) {
         this.electronWindow.loadURL(url);

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, Menu } from "electron";
 import path from "path";
 import os from "os";
+import fs from "fs";
 import shortcut from "electron-localshortcut";
 import QMainWindow from "./src/QMainWindow";
 import QWindowStatus from "./src/QWindowStatus";
@@ -16,8 +17,9 @@ if (isDevMode === true) {
 	reload(appPath);
 }
 
+const windowConfigFile = path.join(appPath, "/src/StatusData.json");
 let mainWindow;
-let windowConfig = (new QWindowStatus(path.join(appPath, "/src/StatusData.json"))).data();
+let windowConfig = (new QWindowStatus(windowConfigFile)).data();
 
 const initMenus = (template) => {
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -54,6 +56,11 @@ const createWindow = () => {
 				mainWindow.closeChildWindow(windowConfig[index].name);
 			}
 		}
+	});
+
+	mainWindow.registerMainEvent('main-save-current-layout', (event, arg) => {
+		windowConfig = mainWindow.saveChildWindowConfig(windowConfig);
+		fs.writeFile(windowConfigFile, JSON.stringify(windowConfig));
 	});
 
 	initMenus(menuTemplate);

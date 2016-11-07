@@ -15,9 +15,15 @@
 	  function closeAllChildWindows() {
 		  ipc.send("main-close-all-child-windows", name);
 	  }
+
+    function saveLayout() {
+		  ipc.send("main-save-current-layout", name);
+	  }
+    
     </script>
     <input type="button" onclick="openDefaultLayout();" value="Open Default Layout"/>    
-	<input type="button" onclick="closeAllChildWindows();" value="Close All"/>
+	  <input type="button" onclick="closeAllChildWindows();" value="Close All"/>
+    <input type="button" onclick="saveLayout();" value="Save Layout"/>
   </body>
 </html>
 
