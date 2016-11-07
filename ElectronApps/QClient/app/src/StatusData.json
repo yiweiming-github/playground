@@ -1,0 +1,23 @@
+[
+    {
+        "name" : "child1",
+        "page" : "child1.html",
+        "x" : 0,
+        "y" : 0,
+        "width" : 400,
+        "height" : 300,
+        "events" : []
+    },
+    
+    {
+        "name": "child2",
+        "page" : "child2.html",
+        "x" : 500,
+        "y" : 500,
+        "width" : 400,
+        "height" : 300,
+        "events" : [
+            "publish-ticker-change"
+        ]
+    }
+]
