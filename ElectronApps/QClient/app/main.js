@@ -4,7 +4,7 @@ import os from "os";
 import shortcut from "electron-localshortcut";
 import QMainWindow from "./src/QMainWindow";
 import QWindowStatus from "./src/QWindowStatus";
-import {menuTemplate} from "./src/MenuTemplate";
+import { menuTemplate } from "./src/MenuTemplate";
 require("electron-debug")();
 
 const appPath = path.resolve(path.join(__dirname, "./"));
@@ -17,6 +17,7 @@ if (isDevMode === true) {
 }
 
 let mainWindow;
+let windowConfig = (new QWindowStatus(path.join(appPath, "/src/StatusData.json"))).data();
 
 const initMenus = (template) => {
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -47,31 +48,38 @@ const createWindow = () => {
 		openDefaultLayout();
 	});
 
+	mainWindow.registerMainEvent('main-close-all-child-windows', (event, arg) => {
+		if (windowConfig) {
+			for (var index in windowConfig) {
+				mainWindow.closeChildWindow(windowConfig[index].name);
+			}
+		}
+	});
+
 	initMenus(menuTemplate);
 	//mainWindow.setMenu(null);
 };
 
 const openDefaultLayout = () => {
+	if (windowConfig) {
+		for (var index in windowConfig) {
+			if (windowConfig[index].defaultOpen === true) {
+				var childWindow = mainWindow.createChildWindow(windowConfig[index].name, {
+					x: windowConfig[index].x,
+					y: windowConfig[index].y,
+					width: windowConfig[index].width,
+					height: windowConfig[index].height,
+					show: false,
+					autoHideMemuBar: true,
+					titleBarStyle: 'hidden'
+				});
+				childWindow.loadURL(`file://${publicFolder}/${windowConfig[index].page}`);
+				for (var i in windowConfig[index].events) {
+					childWindow.registerEventSubscription(windowConfig[index].events[i]);
+				}
 
-	var status = new QWindowStatus(path.join(appPath, "/src/StatusData.json"));
-
-	if (status.data()) {
-		for (var windowConfig in status.data()) {
-			var childWindow = mainWindow.createChildWindow(status.data()[windowConfig].name, {
-				x: status.data()[windowConfig].x,
-				y: status.data()[windowConfig].y,
-				width : status.data()[windowConfig].width,
-				height : status.data()[windowConfig].height,
-				show : false,
-				autoHideMemuBar : true,
-				titleBarStyle : 'hidden'
-			});
-			childWindow.loadURL(`file://${publicFolder}/${status.data()[windowConfig].page}`);
-			for (var event in status.data()[windowConfig].events) {
-				childWindow.registerEventSubscription(status.data()[windowConfig].events[event]);
+				childWindow.show();
 			}
-			
-			childWindow.show();
 		}
 	}
 };
