@@ -164,9 +164,14 @@ export default class QBrowserWindow {
         return this.electronWindow.isMovable();
     }
 
+
+    //////////////////////////////////
+
     loadURL(url) {
         this.electronWindow.loadURL(url);
     }
 
-    
+    setMenu(menu) {
+        this.electronWindow.setMenu(menu);
+    }
 }

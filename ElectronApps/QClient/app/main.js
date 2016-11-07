@@ -4,6 +4,7 @@ import os from "os";
 import shortcut from "electron-localshortcut";
 import QMainWindow from "./src/QMainWindow";
 import QWindowStatus from "./src/QWindowStatus";
+import {menuTemplate} from "./src/MenuTemplate";
 require("electron-debug")();
 
 const appPath = path.resolve(path.join(__dirname, "./"));
@@ -16,6 +17,10 @@ if (isDevMode === true) {
 }
 
 let mainWindow;
+
+const initMenus = (template) => {
+	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+};
 
 const createWindow = () => {
 	mainWindow = new QMainWindow({
@@ -41,6 +46,9 @@ const createWindow = () => {
 	mainWindow.registerMainEvent('main-open-default-layout', (event, arg) => {
 		openDefaultLayout();
 	});
+
+	initMenus(menuTemplate);
+	//mainWindow.setMenu(null);
 };
 
 const openDefaultLayout = () => {
