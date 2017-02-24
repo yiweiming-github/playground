@@ -63,8 +63,8 @@ const createWindow = () => {
 		fs.writeFile(windowConfigFile, JSON.stringify(windowConfig));
 	});
 
-	initMenus(menuTemplate);
-	//mainWindow.setMenu(null);
+	//initMenus(menuTemplate);
+	mainWindow.setMenu(null);
 };
 
 const openDefaultLayout = () => {

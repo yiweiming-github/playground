@@ -1,11 +1,11 @@
 {
-  "name": "electron-starter-kit",
-  "productName": "Electron Starter Kit",
-  "companyName": "LeanKit, Inc.",
-  "copyright": "Copyright (c) 2016, LeanKit, Inc. All rights reserved.",
+  "name": "QClient",
+  "productName": "QClient",
+  "companyName": "",
+  "copyright": "",
   "version": "0.1.0",
   "electronVersion": "1.4.3",
-  "description": "Electron Starter Kit to get you started with Electron",
+  "description": "QClient",
   "main": "app/main.js",
   "scripts": {
     "eslint": "eslint --fix .",
@@ -13,11 +13,11 @@
     "package": "node tasks/package.js",
     "test": "electron-mocha --compilers js:babel-core/register --reporter spec ./spec/*.spec.js --require ./spec/helpers/setup.js --colors"
   },
-  "author": "David Neal <david@reverentgeek.com> (http://reverentgeek.com)",
+  "author": "Weiming Yi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LeanKit-Labs/electron-starter-kit.git"
+    "url": ""
   },
   "dependencies": {
     "babel-preset-node6": "^11.0.0",
