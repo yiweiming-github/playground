@@ -9,6 +9,7 @@ import time
 import market
 
 # hyperparameters
+shape = (-1, 50, 20, 1)
 D = 1000
 H = 200
 batch_size = 10
@@ -92,8 +93,8 @@ with tf.Session() as sess:
         cur_x = observation
 
         #use change to decide action???
-        #x = cur_x - prev_x if prev_x is not None else np.zeros((50, 20))        
-        #x = x.reshape(1, D)
+        #x = cur_x - prev_x if prev_x is not None else np.zeros(0)
+        #x = x.reshape(shape)
         x = cur_x
 
         prev_x = cur_x

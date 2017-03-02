@@ -19,7 +19,7 @@ render = False      # display the game environment
 resume = False      # load existing policy network
 model_file_name = "model_trading"
 np.set_printoptions(threshold=np.nan)
-
+actionChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 env = market.MarketEnv()
 env.initialize('F:\\temp\\TradingGameData')
@@ -36,7 +36,7 @@ states_batch_pl = tf.placeholder(tf.float32, shape=[None, D])
 network = tl.layers.InputLayer(states_batch_pl, name='input_layer')
 network = tl.layers.DenseLayer(network, n_units=H,
                                         act = tf.nn.relu, name='relu1')
-network = tl.layers.DenseLayer(network, n_units=3,
+network = tl.layers.DenseLayer(network, n_units=len(actionChoices),
                             act = tf.identity, name='output_layer')
 probs = network.outputs
 sampling_prob = tf.nn.softmax(probs)
@@ -70,7 +70,7 @@ with tf.Session() as sess:
             feed_dict={states_batch_pl: x}
         )
         
-        action = np.random.choice([1,2,3], p=prob.flatten())
+        action = np.random.choice(actionChoices, p=prob.flatten())
 
         observation, reward, done = env.nextTradingCycle(action)
         reward_sum += reward
