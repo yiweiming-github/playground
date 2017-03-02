@@ -9,7 +9,7 @@ class MarketStatistics:
     def __init__(self, folder, trainingWindow = 60):
         self.trainingWindow = trainingWindow
         self.filePath = folder
-        self.pv = []
+        self.pv = []        
 
     def plotPVStats(self):
         indexData = np.loadtxt(self.filePath + '\\index.txt')
@@ -39,6 +39,7 @@ class MarketEnv:
         self.shape = (-1, 50, 20, 1)
         self.position = 0.0
         self.cashValue = 1.0
+        self.gameCount = 1
 
     def initialize(self, filePath):
         # read data from filePath
@@ -47,6 +48,9 @@ class MarketEnv:
 
     def getPV(self):
         return self.pv
+    
+    def getBenchmark(self):
+        return self.benchmark
     
     """    
     action: 1 - buy to 20%, 2 - buy to 40%, 3 - buy to 60%, 4 - buy to 80%, 5 -  buy to 100%
@@ -176,8 +180,9 @@ class MarketEnv:
                 self.cashValue = 1.0
                 self.pv = 1.0
                 self.position = 0.0
-                print("Picked up categary %d and start with position %d." % (self.categary, startPosition))
-                
+                self.benchmark = self.prices[self.trainingWindow][2] / self.prices[1][2]
+                print("########    Starting Game %d: Picked up categary %d and start with position %d.   ########" % (self.gameCount, self.categary, startPosition))
+                self.gameCount += 1
                 return self.trainingCycles[self.cursor].reshape(self.shape) if useCNN else self.trainingCycles[self.cursor]
 
 

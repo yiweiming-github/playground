@@ -109,9 +109,10 @@ with tf.Session() as sess:
                 tl.files.save_npz(network.all_params, name=model_file_name+'.npz')
 
             pv = env.getPV()
+            benchmark = env.getBenchmark()
             #running_reward = reward_sum if running_reward is None else running_reward * 0.99 + reward_sum * 0.01
             running_reward = pv - 1.0 if running_reward is None else running_reward * 0.99 + (pv - 1.0) * 0.01
-            print('resetting env. episode %d reward total was %f. running mean: %f. PV is %f' % (episode_number, reward_sum, running_reward, env.getPV()))
+            print('resetting env. episode %d reward total was %f. running mean: %f. PV: %f. Benchmark: %f. win: %f' % (episode_number, reward_sum, running_reward, pv, benchmark, pv/benchmark - 1.0))
             reward_sum = 0
             observation = env.reset() # reset env
             prev_x = None
