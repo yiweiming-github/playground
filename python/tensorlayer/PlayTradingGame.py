@@ -16,9 +16,9 @@ learning_rate = 1e-4
 gamma = 1.0 # discount factor, we don't use it in TradingGame
 decay_rate = 0.99
 resume = True      # load existing policy network
-model_file_name = "model_trading"
+model_file_name = "model_trading.bak"
 np.set_printoptions(threshold=np.nan)
-
+actionChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 env = market.MarketEnv()
 env.initialize('F:\\temp\\TradingGameTestData')
@@ -35,7 +35,7 @@ states_batch_pl = tf.placeholder(tf.float32, shape=[None, D])
 network = tl.layers.InputLayer(states_batch_pl, name='input_layer')
 network = tl.layers.DenseLayer(network, n_units=H,
                                         act = tf.nn.relu, name='relu1')
-network = tl.layers.DenseLayer(network, n_units=3,
+network = tl.layers.DenseLayer(network, n_units=len(actionChoices),
                             act = tf.identity, name='output_layer')
 probs = network.outputs
 sampling_prob = tf.nn.softmax(probs)
@@ -56,4 +56,12 @@ with tf.Session() as sess:
     network.print_params()
     network.print_layers()
 
-    sess.run()
+    done = False
+    while not done:
+        prob = tl.utils.predict(sess, network, observation.reshape(1, D), states_batch_pl, sampling_prob)
+        #print(prob)
+        action = np.random.choice(actionChoices, p=prob[0])
+        observation, reward, done = env.nextTradingCycle(action)
+        print('action: %d, pv: %f' % (action, env.getPV()))
+    
+    print ('Result - PV: %f, Benchmark: %f, Win: %f' % (env.getPV(), env.getBenchmark(), env.getPV()/env.getBenchmark() - 1.0))

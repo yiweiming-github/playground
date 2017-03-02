@@ -34,12 +34,11 @@ class MarketStatistics:
 class MarketEnv:
     def __init__(self):        
         self.trainingWindow = 60
-        self.slippage = 0
+        self.slippage = 0.001
         self.pv = 1.0
         self.shape = (-1, 50, 20, 1)
         self.position = 0.0
-        self.cashValue = 1.0
-        self.gameCount = 1
+        self.cashValue = 1.0        
 
     def initialize(self, filePath):
         # read data from filePath
@@ -105,7 +104,7 @@ class MarketEnv:
                 if self.position == 0.0:
                     positionToBuy = targetPosition * self.pv / tradePrice
                     self.averagePrice = tradePrice
-                    self.position += positionToBuy                
+                    self.position += positionToBuy
                     self.cashValue -= positionToBuy * tradePrice
                 else:
                     positionToBuy = (self.pv * targetPosition - (self.pv - self.cashValue)) / tradePrice
@@ -181,8 +180,7 @@ class MarketEnv:
                 self.pv = 1.0
                 self.position = 0.0
                 self.benchmark = self.prices[self.trainingWindow][2] / self.prices[1][2]
-                print("########    Starting Game %d: Picked up categary %d and start with position %d.   ########" % (self.gameCount, self.categary, startPosition))
-                self.gameCount += 1
+                print("#### Picked up categary %d and start with position %d." % (self.categary, startPosition))                
                 return self.trainingCycles[self.cursor].reshape(self.shape) if useCNN else self.trainingCycles[self.cursor]
 
 
