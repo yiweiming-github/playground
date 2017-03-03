@@ -12,15 +12,15 @@ class MarketStatistics:
         self.pv = []        
 
     def plotPVStats(self):
-        indexData = np.loadtxt(self.filePath + '\\index.txt')
-        for stock in indexData:
-            prices = np.loadtxt(self.filePath + '\\' + str(int(stock[0])) + '_prices.txt')
+        codeCount = np.loadtxt(self.filePath + '\\index.txt')
+        for i in range(1, codeCount):
+            prices = np.loadtxt(self.filePath + '\\' + str(i) + '_prices.txt')
             sampleCount = len(prices) - self.trainingWindow + 1
             #print('samplecCount: %d  ' % (sampleCount))
             for i in range(0, sampleCount):
                 if prices[i + self.trainingWindow - 1][2] > 0 and prices[i + 1][3] > 0:
                     self.pv.append(prices[i + self.trainingWindow - 1][2]/prices[i + 1][3])
-            print('Finished adding %d' % (int(stock[0])))       
+            print('Finished adding %d' % (i))       
             
         print('********    Statistics of PV    ********')
         print('mean: %f    std: %f' % (np.mean(self.pv), np.std(self.pv)))
@@ -42,7 +42,11 @@ class MarketEnv:
 
     def initialize(self, filePath):
         # read data from filePath
-        self.indexData = np.loadtxt(filePath + '\\index.txt')
+        self.codeCount = np.loadtxt(filePath + '\\index.txt')
+        self.codes = []
+        with open(filePath + '\\codes.txt') as f:
+            for line in f.readlines():
+                self.codes.append(line.strip('\n'))
         self.folder = filePath
 
     def getPV(self):
@@ -165,22 +169,25 @@ class MarketEnv:
     randomly pick up a trading period and return the first trading cycle
     """
     def reset(self, useCNN = False):
-        while True:
-            self.categary = math.ceil(np.random.rand() * len(self.indexData))
+        while True:            
+            self.categary = math.ceil(np.random.rand() * self.codeCount)
             situationSeries = np.loadtxt(self.folder + '\\' + str(self.categary) + '_charts.txt')
             priceSeries = np.loadtxt(self.folder + '\\' + str(self.categary) + '_prices.txt')
+            dates = np.loadtxt(self.folder + '\\' + str(self.categary) + '_dates.txt')
             startPosition = math.ceil(np.random.rand() * (len(situationSeries) - self.trainingWindow - 1))
             #print("trying categary %d and start with position %d." % (self.categary, startPosition))
             if startPosition > 0:
                 self.trainingCycles = situationSeries[startPosition : startPosition + self.trainingWindow]
                 self.prices = priceSeries[startPosition : startPosition + self.trainingWindow + 1]
+                self.dates = dates[startPosition : startPosition + self.trainingWindow + 1]
                 self.cursor = 0
                 self.averagePrice = 0.0
                 self.cashValue = 1.0
                 self.pv = 1.0
                 self.position = 0.0
-                self.benchmark = self.prices[self.trainingWindow][2] / self.prices[1][2]
-                print("#### Picked up categary %d and start with position %d." % (self.categary, startPosition))                
+                self.benchmark = self.prices[self.trainingWindow][2] / self.prices[0][2]                
+                print("#### Picked up %s categary %d and start with date %d at position %d." % (self.codes[self.categary - 1], self.categary, dates[startPosition], startPosition))
+                print('start: %f, end: %f' % (self.prices[0][2], self.prices[self.trainingWindow][2]))
                 return self.trainingCycles[self.cursor].reshape(self.shape) if useCNN else self.trainingCycles[self.cursor]
 
 

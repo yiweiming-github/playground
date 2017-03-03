@@ -75,18 +75,22 @@ namespace DataReader
         public void GenerateDataForRL(List<string> codes, int startDate, int endDate, string outputFileFolder, int window = 20, int predict = 5)
         {
             var indexFilePath = outputFileFolder + @"\\index.txt";
+            var codesFilePath = outputFileFolder + @"\\codes.txt";
             const string chartFilePathFormat = "{0}\\{1}_charts.txt";
             const string priceFilePathFormat = "{0}\\{1}_prices.txt";
+            const string datesFilePathFormat = "{0}\\{1}_dates.txt";
 
             var index = 1;
             var data = ReadFromDb(codes[0], startDate, endDate, shuffle: false);
             var dummyThresholds = new List<double>() { 1 };
-            var sample = ProcessDataForDL(data, dummyThresholds);            
+            var sample = ProcessDataForDL(data, dummyThresholds);        
             if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 1)
             {
-                SaveIndexFile(string.Format("{0} {1}", index, sample.Item1.Count), indexFilePath, append: false);
+                //SaveIndexFile(string.Format("{0}", index), indexFilePath, append: false);
                 SaveChartFile(sample, string.Format(chartFilePathFormat, outputFileFolder, index), append: false);
                 SavePriceFile(data.GetRange(window - 1, sample.Item1.Count + 1), string.Format(priceFilePathFormat, outputFileFolder, index), append: false);
+                SaveDateFile(sample, string.Format(datesFilePathFormat, outputFileFolder, index), append: false);
+                SaveCodeFile(codes[0], codesFilePath, append: false);
             }
             Console.WriteLine("Finished {0} of {1}", 1, codes.Count);
             ++index;
@@ -97,15 +101,18 @@ namespace DataReader
                 sample = ProcessDataForDL(data, dummyThresholds);
                 if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 1)
                 {
-                    SaveIndexFile(string.Format("{0} {1}", index, sample.Item1.Count), indexFilePath, append: true);
+                    //SaveIndexFile(string.Format("{0}", index), indexFilePath, append: true);
                     SaveChartFile(sample, string.Format(chartFilePathFormat, outputFileFolder, index), append: false);
                     SavePriceFile(data.GetRange(window - 1, sample.Item1.Count + 1), string.Format(priceFilePathFormat, outputFileFolder, index), append: false);
+                    SaveDateFile(sample, string.Format(datesFilePathFormat, outputFileFolder, index), append: false);
+                    SaveCodeFile(codes[i], codesFilePath, append: true);
                 }
                 Console.WriteLine("Finished {0} of {1}", i + 1, codes.Count);
             }
+
+            SaveIndexFile(string.Format("{0}", index - 1), indexFilePath, append: false);
         }
-
-
+        
         #region private functions
 
         private static void SavePreProcessResult(List<double> results, string filePath)
@@ -122,11 +129,11 @@ namespace DataReader
             }
         }
 
-        private List<double> PreProcess(List<Tuple<double, double, double, double>> raw, int window = 20, int gridCount = 50, int predict = 5)
+        private List<double> PreProcess(List<Tuple<double, double, double, double, int>> raw, int window = 20, int gridCount = 50, int predict = 5)
         {
             var results = new List<double>();
             var gridMatrix = new List<int[]>();
-            var processingQueue = new Queue<Tuple<double, double, double, double>>();
+            var processingQueue = new Queue<Tuple<double, double, double, double,int>>();
             var i = 0;
             for (; i < window; ++i)
             {
@@ -155,33 +162,33 @@ namespace DataReader
             return results;
         }
 
-        private double CalculateTargetValue(List<Tuple<double, double, double, double>> raw, int currentIndex, int window, int predict, double windowRange)
+        private double CalculateTargetValue(List<Tuple<double, double, double, double,int>> raw, int currentIndex, int window, int predict, double windowRange)
         {
             return ForwardClose(raw, currentIndex, window, predict, windowRange);
         }
 
-        private double ForwardHigh(List<Tuple<double, double, double, double>> raw, int currentIndex, int window, int predict, double windowRange)
+        private double ForwardHigh(List<Tuple<double, double, double, double, int>> raw, int currentIndex, int window, int predict, double windowRange)
         {
             var forwardHigh = raw.GetRange(currentIndex + window, predict).Max(x => x.Item1);
             return (forwardHigh - raw[currentIndex + window - 1].Item3) / windowRange;
         }
 
-        private double ForwardClose(List<Tuple<double, double, double, double>> raw, int currentIndex, int window, int predict, double windowRange)
+        private double ForwardClose(List<Tuple<double, double, double, double, int>> raw, int currentIndex, int window, int predict, double windowRange)
         {
             var forwardClose = raw[currentIndex + window + predict - 1].Item3;
             return (forwardClose - raw[currentIndex + window - 1].Item3) / windowRange;
         }
 
-        private List<Tuple<double, double, double, double>> ReadFromDb(string code, int startDate, int endDate, bool shuffle = true)
+        private List<Tuple<double, double, double, double, int>> ReadFromDb(string code, int startDate, int endDate, bool shuffle = true)
         {
             var db = DBFactory.DATAENGINE;
             var sql = new StringBuilder();
-            sql.AppendFormat(@"SELECT T1.HIGH_PRICE, T1.LOW_PRICE, T1.CLOSE_PRICE, T1.OPEN_PRICE FROM STOCK_PRICE_BY_DATE T1, STOCK T2 
+            sql.AppendFormat(@"SELECT T1.HIGH_PRICE, T1.LOW_PRICE, T1.CLOSE_PRICE, T1.OPEN_PRICE, T1.PRICE_DATE FROM STOCK_PRICE_BY_DATE T1, STOCK T2 
 WHERE T2.STOCK_CODE= '{0}' AND T1.INSTRUMENT_ID ＝ T2.INSTRUMENT_ID 
 AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, startDate, endDate);
 
             var dbCommand = db.GetSqlStringCommand(sql.ToString());
-            var rawData = new List<Tuple<double, double, double, double>>();
+            var rawData = new List<Tuple<double, double, double, double,int>>();
             using (var reader = db.ExecuteReader(dbCommand))
             {                
                 while (reader.Read())
@@ -190,7 +197,8 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
                     var low = DataOperator.GetDouble(reader, "LOW_PRICE");
                     var close = DataOperator.GetDouble(reader, "CLOSE_PRICE");
                     var open = DataOperator.GetDouble(reader, "OPEN_PRICE");
-                    rawData.Add(new Tuple<double, double, double, double>(high, low, close, open));
+                    var date = DataOperator.GetInt32(reader, "PRICE_DATE");
+                    rawData.Add(new Tuple<double, double, double, double, int>(high, low, close, open, date));
                 }
             }            
 
@@ -209,18 +217,18 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             return rawData;
         }
 
-        private List<Tuple<double, double, double, double>> ReadFromDb(List<string> codes, int startDate, int endDate)
-        {
-            var rawData = new List<Tuple<double, double, double, double>>();            
-            foreach(var code in codes)
-            {
-                rawData.AddRange(ReadFromDb(code, startDate, endDate));                
-            }           
+        //private List<Tuple<double, double, double, double, int>> ReadFromDb(List<string> codes, int startDate, int endDate)
+        //{
+        //    var rawData = new List<Tuple<double, double, double, double, int>>();            
+        //    foreach(var code in codes)
+        //    {
+        //        rawData.AddRange(ReadFromDb(code, startDate, endDate));                
+        //    }           
 
-            return rawData;
-        }
+        //    return rawData;
+        //}
 
-        private Tuple<List<int[]>, int[]> ProcessDataForDL(List<Tuple<double, double, double, double>> raw, List<double> thresholds, int window = 20, int gridCount = 50, int predict = 5)
+        private Tuple<List<int[]>, int[], int[]> ProcessDataForDL(List<Tuple<double, double, double, double, int>> raw, List<double> thresholds, int window = 20, int gridCount = 50, int predict = 5)
         {
             if (raw.Count < window + predict)
             {
@@ -229,7 +237,8 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
 
             var gridMatrix = new List<int[]>();
             var predictList = new List<int>();
-            var processingQueue = new Queue<Tuple<double, double, double, double>>();
+            var dates = new List<int>();
+            var processingQueue = new Queue<Tuple<double, double, double, double, int>>();
 
             var i = 0;
             for(; i < window; ++i)
@@ -244,6 +253,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             gridMatrix.Add(gridArray);
 
             predictList.Add(Categorize(CalculateTargetValue(raw, 0, window, predict, max - min), thresholds));
+            dates.Add(raw[i - 1].Item5);
             //var forwardMax = raw.GetRange(window, predict).Max(x => x.Item1);            
             //predictList.Add(Categorize((forwardMax - raw[window - 1].Item3) / (max - min), thresholds));
 
@@ -259,11 +269,12 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
                 gridMatrix.Add(gridArray);
 
                 predictList.Add(Categorize(CalculateTargetValue(raw, i, window, predict, max - min), thresholds));
+                dates.Add(raw[i - 1 + window].Item5);
                 //forwardMax = raw.GetRange(i + window, predict).Max(x => x.Item1);
                 //predictList.Add(Categorize((forwardMax - raw[i + window - 1].Item3) / (max - min), thresholds));
             }
 
-            return new Tuple<List<int[]>, int[]>(gridMatrix, predictList.ToArray());
+            return new Tuple<List<int[]>, int[], int[]>(gridMatrix, predictList.ToArray(), dates.ToArray());
         }
 
         private List<double> FindThreshold(List<double> results, int bucketCount)
@@ -312,7 +323,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             return thresholds.Count;
         }
 
-        private int[] Gridize(Queue<Tuple<double, double, double, double>> data, int gridCount, GridType gridType = GridType.ClassicKBar)
+        private int[] Gridize(Queue<Tuple<double, double, double, double, int>> data, int gridCount, GridType gridType = GridType.ClassicKBar)
         {
             var max = data.Max(x => x.Item1);
             var min = data.Min(x => x.Item2);
@@ -430,13 +441,13 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
 
         }
 
-        private void SavePlainToFile(Tuple<List<int[]>, int[]> data, string gridFile, string predictFile, bool append = false)
+        private void SavePlainToFile(Tuple<List<int[]>, int[], int[]> data, string gridFile, string predictFile, bool append = false)
         {
             SaveChartFile(data, gridFile, append);
             SavePredictFile(data, predictFile, append);
         }
 
-        private void SaveChartFile(Tuple<List<int[]>, int[]> data, string gridFile, bool append = false)
+        private void SaveChartFile(Tuple<List<int[]>, int[], int[]> data, string gridFile, bool append = false)
         {
             if (data != null)
             {
@@ -454,7 +465,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             }
         }
 
-        private void SavePredictFile(Tuple<List<int[]>, int[]> data, string predictFile, bool append = false)
+        private void SavePredictFile(Tuple<List<int[]>, int[], int[]> data, string predictFile, bool append = false)
         {
             if (data != null)
             {
@@ -476,7 +487,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             }
         }
 
-        private void SavePriceFile(List<Tuple<double, double, double, double>> data, string filePath, bool append = false)
+        private void SavePriceFile(List<Tuple<double, double, double, double, int>> data, string filePath, bool append = false)
         {
             if (data != null)
             {
@@ -486,6 +497,31 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
                     {
                         file.WriteLine("{0} {1} {2} {3}", prices.Item1, prices.Item2, prices.Item3, prices.Item4);
                     }
+                }
+            }
+        }
+
+        private void SaveDateFile(Tuple<List<int[]>, int[], int[]> data, string filePath, bool append = false)
+        {
+            if (data != null)
+            {
+                using (var file = new StreamWriter(filePath, append))
+                {
+                    foreach(var date in data.Item3)
+                    {
+                        file.WriteLine(date);
+                    }
+                }
+            }
+        }
+
+        private void SaveCodeFile(string code, string filePath, bool append = false)
+        {
+            if (!string.IsNullOrEmpty(code))
+            {
+                using (var file = new StreamWriter(filePath, append))
+                {
+                    file.WriteLine(code);
                 }
             }
         }
