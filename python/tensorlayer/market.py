@@ -122,15 +122,17 @@ class MarketEnv:
         positionRatio = 1.0 - self.cashValue / self.pv
         if positionRatio > targetPosition:
             tradePrice = executionPrice
-            if tradePrice > 0.0:
-                positionToSell = ((self.pv - self.cashValue) - self.pv * targetPosition) / tradePrice
-                self.cashValue += positionToSell * tradePrice
-
-                reward = (tradePrice - self.averagePrice) * positionToSell / self.pv                
+            if tradePrice > 0.0:                
                 if targetPosition < 0.2:
+                    positionToSell = self.position
+                    reward = (tradePrice - self.averagePrice) * positionToSell / self.pv
+                    self.cashValue += positionToSell * tradePrice
                     self.averagePrice = 0.0
                     self.position = 0.0
                 else:
+                    positionToSell = ((self.pv - self.cashValue) - self.pv * targetPosition) / tradePrice
+                    reward = (tradePrice - self.averagePrice) * positionToSell / self.pv
+                    self.cashValue += positionToSell * tradePrice
                     self.averagePrice = self.pv * targetPosition / (self.position - positionToSell)
                     self.position -= positionToSell
         return reward
