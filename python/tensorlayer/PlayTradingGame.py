@@ -7,6 +7,65 @@ import tensorlayer as tl
 import numpy as np
 import time
 import market
+import matplotlib.pyplot as plt
+import matplotlib.finance as mpf
+
+def plotKBars(chart):
+    print(chart)
+    dataList = []    
+    for i in range(0, 20):
+        (last, high, low, open, close) = (0, 0, 0, 0, 0)        
+        for j in range(0, 50):
+            if chart[j][i] == 1:
+                if last == 0:
+                    high = 50 - j
+                    close = 50 - j                
+                elif last == 2:
+                    close = 50 - j
+                    open = 50 - j
+                else:
+                    open = 50 - j
+                    low = 50 - j
+            elif chart[j][i] == 2:
+                if last == 0:
+                    high = 50 - j
+                else:
+                    low = 50 - j
+            elif chart[j][i] == -1:
+                if last == 0:
+                    high = 50 - j
+                    open = 50 - j
+                    low = 50 - j
+                elif last == -2:
+                    open = 50 - j
+                    close = 50 - j                
+                else:
+                    low = 50 - j
+                    close = 50 - j
+            elif chart[j][i] == -2:
+                if last == 0:
+                    high = 50 - j
+                else:
+                    low = 50 - j
+            last = chart[j][i]
+        bar = (i+1, open, high, low, close)
+        dataList.append(bar)
+
+    print(dataList)
+    
+    fig, ax = plt.subplots()
+    fig.subplots_adjust(bottom=0.2)    
+    #ax.xaxis_date()
+    ax.autoscale_view()    
+    plt.xticks(rotation=45)
+    plt.yticks()
+    plt.title("K bars")
+    plt.xlabel("seq")
+    plt.ylabel("price point")
+    mpf.candlestick_ohlc(ax,dataList,width=0.5,colorup='r',colordown='green')
+    plt.grid()
+    plt.show()
+
 
 # hyperparameters
 D = 1000
@@ -23,6 +82,7 @@ actionChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 env = market.MarketEnv()
 env.initialize('F:\\temp\\TradingGameTestData')
 observation = env.reset()
+startChart = observation
 prev_x = None
 running_reward = None
 reward_sum = 0
@@ -65,3 +125,4 @@ with tf.Session() as sess:
         print('action: %d, pv: %f' % (action, env.getPV()))
     
     print ('Result - PV: %f, Benchmark: %f, Win: %f' % (env.getPV(), env.getBenchmark(), env.getPV()/env.getBenchmark() - 1.0))
+    plotKBars(startChart.reshape(50,20))
