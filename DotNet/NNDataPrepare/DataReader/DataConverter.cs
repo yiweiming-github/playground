@@ -84,7 +84,7 @@ namespace DataReader
             var data = ReadFromDb(codes[0], startDate, endDate, shuffle: false);
             var dummyThresholds = new List<double>() { 1 };
             var sample = ProcessDataForDL(data, dummyThresholds);        
-            if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 1)
+            if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 2)
             {
                 //SaveIndexFile(string.Format("{0}", index), indexFilePath, append: false);
                 SaveChartFile(sample, string.Format(chartFilePathFormat, outputFileFolder, index), append: false);
@@ -99,7 +99,7 @@ namespace DataReader
             {
                 data = ReadFromDb(codes[i], startDate, endDate, shuffle: false);
                 sample = ProcessDataForDL(data, dummyThresholds);
-                if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 1)
+                if (data != null && sample != null && data.Count - sample.Item1.Count >= window + predict - 2)
                 {
                     //SaveIndexFile(string.Format("{0}", index), indexFilePath, append: true);
                     SaveChartFile(sample, string.Format(chartFilePathFormat, outputFileFolder, index), append: false);
@@ -257,7 +257,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
             //var forwardMax = raw.GetRange(window, predict).Max(x => x.Item1);            
             //predictList.Add(Categorize((forwardMax - raw[window - 1].Item3) / (max - min), thresholds));
 
-            for (i = 1; i < raw.Count - window - predict + 1; ++i)
+            for (i = 0; i < raw.Count - window - predict + 1; ++i)
             {
                 processingQueue.Dequeue();
                 processingQueue.Enqueue(raw[i + window]);
@@ -269,7 +269,7 @@ AND T1.PRICE_DATE >= {1} AND T1.PRICE_DATE <= {2} ORDER BY PRICE_DATE", code, st
                 gridMatrix.Add(gridArray);
 
                 predictList.Add(Categorize(CalculateTargetValue(raw, i, window, predict, max - min), thresholds));
-                dates.Add(raw[i - 1 + window].Item5);
+                dates.Add(raw[i + window].Item5);
                 //forwardMax = raw.GetRange(i + window, predict).Max(x => x.Item1);
                 //predictList.Add(Categorize((forwardMax - raw[i + window - 1].Item3) / (max - min), thresholds));
             }
