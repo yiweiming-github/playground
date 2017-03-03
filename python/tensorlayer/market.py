@@ -55,6 +55,9 @@ class MarketEnv:
     def getBenchmark(self):
         return self.benchmark
     
+    def getPrices(self):
+        return self.prices
+    
     """    
     action: 1 - buy to 20%, 2 - buy to 40%, 3 - buy to 60%, 4 - buy to 80%, 5 -  buy to 100%
             6 - sell to 80%, 7 - sell to 60%, 8 - sell to 40%, 9 - sell to 20%, 10 - sell to 0%

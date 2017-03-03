@@ -10,48 +10,45 @@ import market
 import matplotlib.pyplot as plt
 import matplotlib.finance as mpf
 
-def plotKBars(chart):
-    print(chart)
+def plotKBarsFromChart(chart, row, col):    
     dataList = []    
-    for i in range(0, 20):
+    for i in range(0, col):
         (last, high, low, open, close) = (0, 0, 0, 0, 0)        
-        for j in range(0, 50):
+        for j in range(0, row):
             if chart[j][i] == 1:
                 if last == 0:
-                    high = 50 - j
-                    close = 50 - j                
+                    high = row - j
+                    close = row - j                
                 elif last == 2:
-                    close = 50 - j
-                    open = 50 - j
+                    close = row - j
+                    open = row - j
                 else:
-                    open = 50 - j
-                    low = 50 - j
+                    open = row - j
+                    low = row - j
             elif chart[j][i] == 2:
                 if last == 0:
-                    high = 50 - j
+                    high = row - j
                 else:
-                    low = 50 - j
+                    low = row - j
             elif chart[j][i] == -1:
                 if last == 0:
-                    high = 50 - j
-                    open = 50 - j
-                    low = 50 - j
+                    high = row - j
+                    open = row - j
+                    low = row - j
                 elif last == -2:
-                    open = 50 - j
-                    close = 50 - j                
+                    open = row - j
+                    close = row - j                
                 else:
-                    low = 50 - j
-                    close = 50 - j
+                    low = row - j
+                    close = row - j
             elif chart[j][i] == -2:
                 if last == 0:
-                    high = 50 - j
+                    high = row - j
                 else:
-                    low = 50 - j
+                    low = row - j
             last = chart[j][i]
         bar = (i+1, open, high, low, close)
         dataList.append(bar)
-
-    print(dataList)
     
     fig, ax = plt.subplots()
     fig.subplots_adjust(bottom=0.2)    
@@ -63,6 +60,32 @@ def plotKBars(chart):
     plt.xlabel("seq")
     plt.ylabel("price point")
     mpf.candlestick_ohlc(ax,dataList,width=0.5,colorup='r',colordown='green')
+    plt.grid()
+    plt.show()
+
+def plotKBarsFromPrices(prices, pvList):
+    dataList = []
+    i = 1
+    for price in prices:
+        bar = (i, price[3], price[0], price[1], price[2])
+        dataList.append(bar)
+        i += 1
+
+    fig, ax = plt.subplots()
+    fig.subplots_adjust(bottom=0.2)    
+    #ax.xaxis_date()
+    ax.autoscale_view()    
+    plt.xticks(rotation=45)
+    plt.yticks()
+    plt.title("K bars")
+    plt.xlabel("seq")
+    plt.ylabel("price point")
+    mpf.candlestick_ohlc(ax,dataList,width=0.5,colorup='r',colordown='green')
+
+    if pvList is not None:
+        x = range(1, len(pvList) + 1)        
+        plt.plot(x, pvList)
+
     plt.grid()
     plt.show()
 
@@ -82,7 +105,7 @@ actionChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 env = market.MarketEnv()
 env.initialize('F:\\temp\\TradingGameTestData')
 observation = env.reset()
-startChart = observation
+startChart = observation.reshape(50, 20)
 prev_x = None
 running_reward = None
 reward_sum = 0
@@ -116,13 +139,23 @@ with tf.Session() as sess:
     network.print_params()
     network.print_layers()
 
+    prices = env.getPrices()
+    benchmarkPrice = prices[0][2]
     done = False
+    pvList = []
+    pvList.append(benchmarkPrice) #to align with bar count in K-bar chart
+    pvList.append(benchmarkPrice) 
     while not done:
         prob = tl.utils.predict(sess, network, observation.reshape(1, D), states_batch_pl, sampling_prob)
         #print(prob)
         action = np.random.choice(actionChoices, p=prob[0])
         observation, reward, done = env.nextTradingCycle(action)
+        # latestChart = observation.reshape(50, 20)
+        # latestBar = np.array([latestChart[0:, 19]]).T
+        # startChart = np.concatenate((startChart, latestBar), axis = 1)
+        pvList.append(env.getPV() * benchmarkPrice)
         print('action: %d, pv: %f' % (action, env.getPV()))
     
     print ('Result - PV: %f, Benchmark: %f, Win: %f' % (env.getPV(), env.getBenchmark(), env.getPV()/env.getBenchmark() - 1.0))
-    plotKBars(startChart.reshape(50,20))
+    #plotKBarsFromChart(startChart, 50, 20)        
+    plotKBarsFromPrices(prices, pvList)
