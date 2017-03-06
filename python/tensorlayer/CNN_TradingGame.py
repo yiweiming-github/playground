@@ -20,7 +20,7 @@ render = False      # display the game environment
 resume = False      # load existing policy network
 model_file_name = "model_trading_cnn"
 np.set_printoptions(threshold=np.nan)
-
+actionChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 env = market.MarketEnv()
 env.initialize('F:\\temp\\TradingGameData')
@@ -66,7 +66,7 @@ network = tl.layers.FlattenLayer(network, name ='flatten_layer')
 # network = tl.layers.DenseLayer(network, n_units = 500, act = tf.nn.relu, name='relu1')
 # network = tl.layers.DropoutLayer(network, keep = 0.5, name = 'dropout_layer2')
 
-network = tl.layers.DenseLayer(network, n_units=3,
+network = tl.layers.DenseLayer(network, n_units=len(actionChoices),
                             act = tf.identity, name='output_layer')
 probs = network.outputs
 sampling_prob = tf.nn.softmax(probs)
@@ -105,7 +105,7 @@ with tf.Session() as sess:
             feed_dict={states_batch_pl: x}
         )
         
-        action = np.random.choice([1,2,3], p=prob.flatten())
+        action = np.random.choice(actionChoices, p=prob.flatten())
 
         observation, reward, done = env.nextTradingCycle(action, useCNN = True)
         reward_sum += reward
@@ -144,9 +144,10 @@ with tf.Session() as sess:
                 tl.files.save_npz(network.all_params, name=model_file_name+'.npz')
 
             pv = env.getPV()
+            benchmark = env.getBenchmark()
             #running_reward = reward_sum if running_reward is None else running_reward * 0.99 + reward_sum * 0.01
             running_reward = pv - 1.0 if running_reward is None else running_reward * 0.99 + (pv - 1.0) * 0.01
-            print('resetting env. episode %d reward total was %f. running mean: %f. PV is %f' % (episode_number, reward_sum, running_reward, env.getPV()))
+            print('resetting env. episode %d reward total was %f. running mean: %f. PV: %f. Benchmark: %f. win: %f' % (episode_number, reward_sum, running_reward, pv, benchmark, pv/benchmark - 1.0))
             reward_sum = 0
             observation = env.reset(useCNN = True) # reset env
             prev_x = None

@@ -12,15 +12,16 @@ class MarketStatistics:
         self.pv = []        
 
     def plotPVStats(self):
-        codeCount = np.loadtxt(self.filePath + '\\index.txt')
+        codeCount = int(np.loadtxt(self.filePath + '\\index.txt'))
+        print('code count %d' % (codeCount))
         for i in range(1, codeCount):
             prices = np.loadtxt(self.filePath + '\\' + str(i) + '_prices.txt')
             sampleCount = len(prices) - self.trainingWindow + 1
             #print('samplecCount: %d  ' % (sampleCount))
-            for i in range(0, sampleCount):
-                if prices[i + self.trainingWindow - 1][2] > 0 and prices[i + 1][3] > 0:
-                    self.pv.append(prices[i + self.trainingWindow - 1][2]/prices[i + 1][3])
-            print('Finished adding %d' % (i))       
+            for j in range(0, sampleCount):
+                if prices[j + self.trainingWindow - 1][2] > 0 and prices[j][2] > 0:
+                    self.pv.append(prices[j + self.trainingWindow - 1][2]/prices[j][2])
+            print('Finished adding code %d: %d records' % (i, j))       
             
         print('********    Statistics of PV    ********')
         print('mean: %f    std: %f' % (np.mean(self.pv), np.std(self.pv)))
