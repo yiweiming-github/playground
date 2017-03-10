@@ -123,7 +123,7 @@ with tf.Session() as sess:
             # get batch        
             X_train_a, y_train_a, nextDataStart = getBatchWithShuffle(X_train, y_train, batch_size, epoch, nextDataStart)
             # one train
-            lossValue = sess.run([train_op, loss], feed_dict = {x: X_train_a, y_: y_train_a})
+            _, lossValue = sess.run([train_op, loss], feed_dict = {x: X_train_a, y_: y_train_a})
             totalLoss += lossValue            
             step += 1
         duration = time.time() - start_time
