@@ -1,0 +1,1 @@
+An introduction of samples of using NN in solving trading problem, please check [notebook](https://github.com/yiweiming-github/playground/blob/master/python/tensorlayer/README.ipynb)
