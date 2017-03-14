@@ -102,35 +102,63 @@ def main():
     y_ = tf.placeholder(tf.int64, shape=[None, ], name='y_')
 
     #define CNN
-    with tf.name_scope('cnn_layer1'):
-        weights = tf.get_variable(name='W_conv2d1', shape=[5, 5, 1, 32])
-        conv2d_layer1 = tf.nn.relu(tf.nn.conv2d(x,
-                                                weights,
-                                                strides=[1, 1, 1, 1],
-                                                padding='SAME',
-                                                name='cnn_layer1'))
+    conv2d_layer1 = tf.layers.conv2d(
+        inputs=x,
+        filters=32,
+        kernel_size=[5, 5],
+        padding='same',
+        activation=tf.nn.relu,
+        name='cnn_layer1')
+    # with tf.name_scope('cnn_layer1'):
+    #     weights = tf.get_variable(name='W_conv2d1', shape=[5, 5, 1, 32])
+    #     conv2d_layer1 = tf.nn.relu(tf.nn.conv2d(x,
+    #                                             weights,
+    #                                             strides=[1, 1, 1, 1],
+    #                                             padding='SAME',
+    #                                             name='cnn_layer1'))
 
-    with tf.name_scope('pool_layer1'):
-        pool_layer1 = tf.nn.max_pool(conv2d_layer1,
-                                     ksize=[1, 2, 2, 1],
-                                     strides=[1, 2, 2, 1],
-                                     padding='SAME',
-                                     name='pool_layer1')
+    pool_layer1 = tf.layers.max_pooling2d(
+        inputs=conv2d_layer1,
+        pool_size=[2, 2],
+        strides=2,
+        padding='same',
+        name='pool_layer1')
+    # with tf.name_scope('pool_layer1'):
+    #     pool_layer1 = tf.nn.max_pool(conv2d_layer1,
+    #                                  ksize=[1, 2, 2, 1],
+    #                                  strides=[1, 2, 2, 1],
+    #                                  padding='SAME',
+    #                                  name='pool_layer1')
 
-    with tf.name_scope('cnn_layer2'):
-        weights = tf.get_variable(name='W_conv2d2', shape=[5, 5, 32, 64])
-        conv2d_layer2 = tf.nn.relu(tf.nn.conv2d(pool_layer1,
-                                                weights,
-                                                strides=[1, 1, 1, 1],
-                                                padding='SAME',
-                                                name='cnn_layer2'))
+    conv2d_layer2 = tf.layers.conv2d(
+        inputs=pool_layer1,
+        filters=64,
+        kernel_size=[5, 5],
+        padding='same',
+        activation=tf.nn.relu,
+        name='cnn_layer2')
+    # with tf.name_scope('cnn_layer2'):
+    #     weights = tf.get_variable(name='W_conv2d2', shape=[5, 5, 32, 64])
+    #     conv2d_layer2 = tf.nn.relu(tf.nn.conv2d(pool_layer1,
+    #                                             weights,
+    #                                             strides=[1, 1, 1, 1],
+    #                                             padding='SAME',
+    #                                             name='cnn_layer2'))
 
-    with tf.name_scope('pool_layer2'):
-        pool_layer2 = tf.nn.max_pool(conv2d_layer2,
-                                     ksize=[1, 2, 2, 1],
-                                     strides=[1, 2, 2, 1],
-                                     padding='SAME',
-                                     name='pool_layer2')
+    pool_layer2 = tf.layers.max_pooling2d(
+        inputs=conv2d_layer2,
+        pool_size=[2, 2],
+        strides=2,
+        padding='same',
+        name='pool_layer2')
+
+    # with tf.name_scope('pool_layer2'):
+    #     pool_layer2 = tf.nn.max_pool(conv2d_layer2,
+    #                                  ksize=[1, 2, 2, 1],
+    #                                  strides=[1, 2, 2, 1],
+    #                                  padding='SAME',
+    #                                  name='pool_layer2')
+
 
     with tf.name_scope('flattern_layer'):
         dim = 1
@@ -138,25 +166,45 @@ def main():
             dim *= d
         flatten_layer = tf.reshape(pool_layer2, shape=[-1, dim], name='flatten_layer')
 
-    with tf.name_scope('dropout_layer1'):
-        dropout_layer1 = tf.nn.dropout(flatten_layer, keep_prob=0.5, name='dropout_layer1')
+    dropout_layer1 = tf.layers.dropout(
+        inputs=flatten_layer,
+        rate=0.5,
+        training=True,
+        name='dropout_layer1')
+    # with tf.name_scope('dropout_layer1'):
+    #     dropout_layer1 = tf.nn.dropout(flatten_layer, keep_prob=0.5, name='dropout_layer1')
 
-    with tf.name_scope('dense_layer1'):
-        n_in = int(dropout_layer1.get_shape()[-1])
-        n_units = 500
-        weights = tf.Variable(tf.random_uniform([n_in, n_units], -1.0, 1.0), name='weights')
-        bias = tf.Variable(tf.zeros(shape=[n_units]), name='bias')
-        dense_layer1 = tf.nn.relu(tf.matmul(dropout_layer1, weights) + bias)
+    dense_layer1 = tf.layers.dense(
+        inputs=dropout_layer1,
+        units=500,
+        activation=tf.nn.relu,
+        name='dense_layer1')
+    # with tf.name_scope('dense_layer1'):
+    #     n_in = int(dropout_layer1.get_shape()[-1])
+    #     n_units = 500
+    #     weights = tf.Variable(tf.random_uniform([n_in, n_units], -1.0, 1.0), name='weights')
+    #     bias = tf.Variable(tf.zeros(shape=[n_units]), name='bias')
+    #     dense_layer1 = tf.nn.relu(tf.matmul(dropout_layer1, weights) + bias)
 
-    with tf.name_scope('dropout_layer2'):
-        dropout_layer2 = tf.nn.dropout(dense_layer1, keep_prob=0.5, name='dropout_layer2')
+    dropout_layer2 = tf.layers.dropout(
+        inputs=dense_layer1,
+        rate=0.5,
+        training=True,
+        name='dropout_layer2')
+    # with tf.name_scope('dropout_layer2'):
+    #     dropout_layer2 = tf.nn.dropout(dense_layer1, keep_prob=0.5, name='dropout_layer2')
 
-    with tf.name_scope('output_layer'):
-        n_in = int(dropout_layer2.get_shape()[-1])
-        n_units = 10
-        weights = tf.Variable(tf.random_uniform([n_in, n_units], -1.0, 1.0), name='weights')
-        bias = tf.Variable(tf.zeros(shape=[n_units]), name='bias')
-        dense_layer2 = tf.identity(tf.matmul(dropout_layer2, weights) + bias)
+    dense_layer2 = tf.layers.dense(
+        inputs=dropout_layer2,
+        units=10,
+        activation=tf.identity,
+        name='dense_layer2')
+    # with tf.name_scope('output_layer'):
+    #     n_in = int(dropout_layer2.get_shape()[-1])
+    #     n_units = 10
+    #     weights = tf.Variable(tf.random_uniform([n_in, n_units], -1.0, 1.0), name='weights')
+    #     bias = tf.Variable(tf.zeros(shape=[n_units]), name='bias')
+    #     dense_layer2 = tf.identity(tf.matmul(dropout_layer2, weights) + bias)
 
     y = dense_layer2
 
