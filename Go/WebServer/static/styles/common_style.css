@@ -1,0 +1,570 @@
+/********************************************************************************
+class: basecss.Background
+********************************************************************************/
+
+.xr_bg_primary {
+    background: #161819;
+    /*background: #f38b1e;*/
+}
+
+.xr_bg_secondary {
+    background: #232628;
+}
+
+.xr_bg_extra {
+    background: #333739;    
+}
+/********************************************************************************
+class: basecss.Button
+********************************************************************************/
+.xr-btn {
+    height: 24px;
+    width: 70px;
+    border: none;
+    border-radius:2px;
+    font-family:MicrosoftYaHei;
+    font-size:14px;
+    line-height:14px;
+    text-align: center;
+}
+
+.xr-btn-sm {
+    height:20px;
+    width:40px;
+    border: none;
+    border-radius:2px;
+    font-family:fantasy;
+    font-size:12px;
+    line-height:12px;
+    text-align: center;
+}
+
+.xr-btn-lg {
+    height:30px;
+    width:100px;
+    border: none;
+    border-radius:2px;
+    font-family:MicrosoftYaHei;
+    font-size:14px;
+    line-height:14px;
+    text-align: center;
+}
+
+.xr-btn-info {
+    background: #0d7b7b;
+    color:#ffebc8;
+}
+
+.xr-btn-info:hover,
+.xr-btn-info.hover {
+    background: #179595;
+}
+
+.xr-btn-info:active,
+.xr-btn-info.active {
+    background: #0d6060;
+}
+
+.xr-btn-danger {
+    color:#ffebc8;
+    background: #c03647;
+}
+
+.xr-btn-danger:hover,
+.xr-btn-danger.hover {
+    background: #d23044;
+}
+
+.xr-btn-danger:active,
+.xr-btn-danger.active {
+    background: #a7172a;
+}
+
+.xr-btn-warning {
+    color:#1b1b1b;
+    background: #f38b1e;
+}
+
+.xr-btn-warning:hover,
+.xr-btn-warning.hover {
+    background: #ffa13e;
+}
+
+
+.xr-btn-warning:active,
+.xr-btn-warning.active {
+    color:#000000;
+    background: #b47010;
+}
+
+.xr-btn.disabled,
+.xr-btn[disabled],
+.xr-btn-lg[disabled],
+.xr-btn-sm[disabled] {
+    color:#7b8082;
+    background: #35393b;
+}
+
+.xr-btn-gray {
+    background: #4b4d50;
+    color:#fff9ee;
+}
+
+.xr-btn-gray:hover,
+.xr-btn-gray.hover {
+    background: #6d7075;
+}
+
+.xr-btn-gray:active,
+.xr-btn-gray.active {
+    background: #0d6060;
+    color:#ffebc8;
+}
+/********************************************************************************
+class: simpledirective.inputs.checkbox
+********************************************************************************/
+
+.xr-input-control.xr-checkbox {
+    display: inline-block;
+}
+
+.xr-input-control.xr-checkbox > input[type=checkbox] {
+    display: none;
+}
+
+.xr-input-control.xr-checkbox > .check {
+    display: inline-block;
+}
+
+.xr-input-control.xr-checkbox > .caption {
+    color: #ffebc8;
+    font-size: .7292rem;
+    line-height: .7292rem;
+    text-align: left;
+
+    cursor: default;
+}
+
+.xr-input-control.xr-checkbox > input[type=checkbox],
+.xr-input-control.xr-checkbox > .check,
+.xr-input-control.xr-checkbox > .caption {
+    vertical-align: middle;
+}
+
+/********************************************************************************
+class: basecss.Button
+********************************************************************************/
+
+
+.xr-icon {
+    display: block;
+    border-radius: 2px;
+    background-image: url("../image/icons.png");
+    background-repeat: no-repeat;
+}
+.xr-icon[disabled] {
+    cursor: no-drop;
+    opacity: 0.5;
+}
+.xr-icon:hover {
+    opacity: 0.7;
+}
+.xr-icon:active {
+    opacity: 1;
+}
+.xr-icon-primary {
+    background-color: #0d7b7b;
+}
+
+/* ����css */
+.xr-icon-checkbox-selected {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -5px;
+}
+
+.xr-icon-checkbox-unselected {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -5px;
+}
+
+.xr-icon-contact-info {
+    width: 20px;
+    height: 20px;
+    background-position: -57px -5px;
+}
+
+.xr-icon-add {
+    width: 20px;
+    height: 20px;
+    background-position: -87px -5px;
+}
+
+.xr-icon-ban {
+    width: 20px;
+    height: 20px;
+    background-position: -117px -5px;
+}
+
+.xr-icon-cancel-top {
+    width: 20px;
+    height: 20px;
+    background-position: -5px -35px;
+}
+
+.xr-icon-close {
+    width: 20px;
+    height: 20px;
+    background-position: -35px -35px;
+}
+
+.xr-icon-concern {
+    width: 20px;
+    height: 20px;
+    background-position: -65px -35px;
+}
+
+.xr-icon-delete {
+    width: 20px;
+    height: 20px;
+    background-position: -94px -35px;
+}
+
+.xr-icon-download-noraml {
+    width: 20px;
+    height: 20px;
+    background-position: -125px -35px;
+}
+
+.xr-icon-edit {
+    width: 20px;
+    height: 20px;
+    background-position: -5px -65px;
+}
+
+.xr-icon-enlarge {
+    width: 20px;
+    height: 20px;
+    background-position: -35px -65px;
+}
+
+.xr-icon-maximize {
+    width: 20px;
+    height: 20px;
+    background-position: -65px -65px;
+}
+
+.xr-icon-narrow {
+    width: 20px;
+    height: 20px;
+    background-position: -95px -65px;
+}
+
+.xr-icon-popup {
+    width: 20px;
+    height: 20px;
+    background-position: -125px -65px;
+}
+
+.xr-icon-restore {
+    width: 20px;
+    height: 20px;
+    background-position: -5px -95px;
+}
+
+.xr-icon-search-location {
+    width: 20px;
+    height: 20px;
+    background-position: -35px -95px;
+}
+
+.xr-icon-search-location-copy {
+    width: 20px;
+    height: 20px;
+    background-position: -65px -95px;
+}
+
+.xr-icon-search {
+    width: 20px;
+    height: 20px;
+    background-position: -95px -95px;
+}
+
+.xr-icon-tanru {
+    width: 20px;
+    height: 20px;
+    background-position: -125px -95px;
+}
+
+.xr-icon-window-top {
+    width: 20px;
+    height: 20px;
+    background-position: -5px -125px;
+}
+
+.xr-icon-radiobutton-selected {
+    width: 16px;
+    height: 16px;
+    background-position: -35px -125px;
+}
+
+.xr-icon-radiobutton-unselected {
+    width: 16px;
+    height: 16px;
+    background-position: -61px -125px;
+}
+
+.xr-icon-radiobutton-unselected-disabled {
+    width: 16px;
+    height: 16px;
+    background-position: -87px -125px;
+}
+
+.xr-icon-window-downsize {
+    width: 20px;
+    height: 20px;
+    background-position: -113px -125px;
+}
+
+.xr-icon-window-minimize {
+    width: 20px;
+    height: 20px;
+    background-position: -147px -5px;
+}
+/********************************************************************************
+class: basecss.Button
+********************************************************************************/
+
+
+.xr-label {
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-family:MicrosoftYaHei;
+	font-size:14px;
+	color:#7b8082;
+	line-height:14px;
+	text-align:left;
+}
+
+
+/********************************************************************************
+class: basecss.List
+********************************************************************************/
+
+.xr-list-group {
+    font-size: 14px;
+    color: #ffda91;
+    padding: 0px;
+
+}
+
+.xr-list-item {
+    list-style: none;
+    line-height: 24px;
+    padding: 3px 10px;
+}
+.xr-list-item:hover {
+    background-color: #1d4243!important;
+}
+.xr-list-group.xr-back-style .xr-list-item:nth-child(odd) {
+    background-color: #191b1c;
+}
+.xr-list-group.xr-back-style .xr-list-item:nth-child(even) {
+    background-color: #232628;
+}
+/********************************************************************************
+class: basecss.Panel
+********************************************************************************/
+.xr-panel {
+
+}
+.xr-panel-head {
+    font-size:14px;
+    color:#ffebc8;
+    line-height:14px;
+    text-align:left;
+    padding: 10px 15px;
+    background-color: #1d595b;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px
+}
+.xr-panel-body {
+    background-color: #161819;
+    padding: 10px;
+}
+/********************************************************************************
+class: basecss.Table
+********************************************************************************/
+.xr-table {
+    background-color: #161819;
+    font-family: 'Microsoft YaHei Regular';
+
+}
+.xr-table-head {
+    font-size:14px;
+}
+.xr-table-head tr{
+    height: 40px;background-color:#232628;
+}
+.xr-table-head tr td{
+    padding:0px 30px;font-size:14px;text-align: center;color:#7B8082;line-height: 40px;
+ }
+.xr-table-body tr:nth-child(even){
+    background-color: #232628;
+}
+.xr-table-body tr:nth-child(odd){
+    background-color: #191B1C;
+}
+.xr-table-body tr:hover{
+    background-color: #1d4243;
+}
+.xr-table-body tr td{
+    height: 30px;line-height: 30px;color:#ffebc8;text-align: center;
+}
+.xr-table-body .xr-table-special{
+    color:#ffda9a;
+}
+.xr-table-body tr.xr-table-rise{
+    line-height: 40px;height: 40px;
+}
+.xr-table-body tr.xr-table-selected{
+    background-color: #0d7b7b !important;
+}
+/********************************************************************************
+class: basecss.Text
+********************************************************************************/
+
+input, textarea, keygen, select, button,
+.body-font-family {
+    font-family: MicrosoftYaHei;
+}
+
+.xr-text-primary {
+    color: #ffda9a;
+}
+
+.xr-text-secondary {
+    color: #ffebc8;
+}
+
+.xr-text-extra {
+    color: #7b8082;
+}
+
+.xr-text-lg {
+    line-height: 18px;
+    font-size: 18px;
+}
+
+.xr-text-sm {
+    line-height: 14px;
+    font-size: 14px;
+}
+
+.xr-text-xs {
+    line-height: 12px;
+    font-size: 12px;
+}
+
+.xr-text-warning {
+    color: #fe900d;
+}
+
+.xr-text-danger {
+    color: #ff3b54;
+}
+
+.xr-text-info {
+    color: #38caca;
+}
+
+a.xr-primary {
+    text-decoration: none;
+    color: #43adff;
+}
+
+a.xr-primary:hover {
+    color: #79c3ff;
+}
+
+a.xr-primary:focus {
+    color: #1781D3;
+}
+
+a.xr-primary[disabled] {
+    text-decoration: none;
+    color: #535353;
+}
+
+a.xr-extra {
+    text-decoration: none;
+    color:#ffebc8;
+}
+
+a.xr-extra:hover {
+    color:#ffda9a;
+}
+
+a.xr-extra:focus {
+    text-decoration: none;
+    color:#d69b34;
+}
+
+a.xr-extra[disabled] {
+    text-decoration: none;
+    color:#535353;
+}
+
+/* add space between text and underline of an <A> element */
+a.xr-text-underline {
+    text-decoration: none;
+    position: relative;
+}
+a.xr-text-underline:after {
+    content: '';
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    border-width: 0 0 1px;
+    border-style: solid;
+}
+/*end space between text and underline of an <A> element*/
+/********************************************************************************
+class: basecss.input.text
+********************************************************************************/
+.xr-input-text {
+    background: #3b4145;
+    border: 1px solid transparent;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    padding: 0 3px;
+
+    color: #fff3dd;
+}
+
+.xr-input-text-sm {
+    height: 24px;
+}
+
+.xr-input-text-lg {
+    height: 30px;
+}
+
+.xr-input-text:hover {
+    background: #42494e;
+    border-color: #697277;
+}
+
+.xr-input-text:focus {
+    background: #161819;
+    border: 1px solid #0d7b7b;
+    outline:  1px solid transparent;
+}
+
+.xr-input-text[disabled] {
+    background: #2b2e2f;
+}

@@ -1,46 +1,30 @@
 package main
 
 import (
-    "flag"
-    "html/template"
-    "log"
     "net/http"
+    "github.com/emicklei/go-restful"
 )
 
-var addr = flag.String("addr", ":1718", "http service address") // Q=17, R=18
+type User struct {
+    Name string
+    Age int
+}
 
-var templ = template.Must(template.New("qr").Parse(templateStr))
+func SampleService(request *restful.Request, response *restful.Response) {
+    user := new(User)
+    user.Name = "John"
+    user.Age = 35
+    response.WriteHeaderAndEntity(http.StatusCreated, user)
+}
 
 func main() {
-    flag.Parse()
-    http.Handle("/", http.HandlerFunc(QR))
-    err := http.ListenAndServe(*addr, nil)
-    if err != nil {
-        log.Fatal("ListenAndServe:", err)
-    }
-}
+    http.Handle("/", http.FileServer(http.Dir("./static/")))
 
-func QR(w http.ResponseWriter, req *http.Request) {
-    templ.Execute(w, req.FormValue("s"))
-}
+    wsContainer := restful.NewContainer()
+    ws := new(restful.WebService)
+    ws.Path("/services/sample_service").Doc("Sample Service").Consumes(restful.MIME_JSON).Produces(restful.MIME_JSON) // you can specify this per route as well
+    ws.Route(ws.GET("").To(SampleService).Doc("Sample Service").Operation("SampleService"))//.Reads(User{})) // from the request
+    wsContainer.Add(ws)
 
-const templateStr = `
-<html>
-<head>
-<title>QR Link Generator</title>
-</head>
-<body>
-{{if .}}
-<img src="http://chart.apis.google.com/chart?chs=300x300&cht=qr&choe=UTF-8&chl={{.}}" />
-<br>
-{{.}}
-<br>
-<br>
-{{end}}
-<form action="/" name=f method="GET"><input maxLength=1024 size=70
-name=s value="" title="Text to QR Encode"><input type=submit
-value="Show QR" name=qr>
-</form>
-</body>
-</html>
-`
+    http.ListenAndServe(":8999", wsContainer)
+}

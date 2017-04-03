@@ -1,0 +1,28 @@
+database:
+    "xray" :
+        "enable" : yes
+        "host" : '172.16.74.58'
+        "port" : 3306
+        "user" : 'xray'
+        "password" : '12345678'
+        "database" : 'xray'
+        "charset" : 'utf8'
+
+    "xray_market" :
+        "enable" : yes
+        "host" : '172.16.74.58'
+        "port" : 3306
+        "user" : 'xray'
+        "password" : '12345678'
+        "database" : 'xray_market'
+        "charset" : 'utf8'    
+
+application:
+    "host" : "127.0.0.1"
+    "port" : "8990"
+    "publish-bond-risk-level" : yes
+
+email_server:
+    "smtp" : "smtp.mxhichina.com"
+    "from" : "services@xrayfund.cn"
+    "password" : "xray@2016"
