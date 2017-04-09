@@ -5,6 +5,5 @@ import (
 	"service/samplelib"
 )
 
-func main() {
-	fmt.Printf(samplelib.Reverse("Hello, world.\n"))
+func main() {fmt.Printf(samplelib.Reverse("Hello, world.\n"))
 }
