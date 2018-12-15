@@ -28,3 +28,14 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## 说明
+这是一个vue前端项目示例，采用vue-cli创建，例子中用axois作RESTful跨域请求后端
+
+## 运行
+```
+cnpm install
+cnpm install jquery
+cnpm install bootstrap
+npm run dev
+```
