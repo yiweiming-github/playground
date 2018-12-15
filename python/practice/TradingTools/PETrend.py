@@ -42,10 +42,10 @@ def get_eps_series(code, dates):
 
 
 
-code = '300017'
+code = '000651'
 
 #data = ts.get_hist_data(code, start='2012-01-01', end='2016-06-30')
-data = ts.get_h_data(code, autype=None, start='2010-01-01', end='2016-01-31')
+data = ts.get_h_data(code, autype=None, start='2010-01-01', end='2018-10-31')
 print('Get price data done!')
 
 date_index = [];
