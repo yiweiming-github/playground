@@ -1,5 +1,26 @@
-<template>
-    <h2>{{marketData}}</h2>
+<template>    
+    <div class="container">        
+        <div class="row">
+            <div class="col-sm"/>
+            <div class="col-sm">
+                <div>
+                    <table class="table">
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Price</th>
+                        </tr>
+                        <tr v-bind:class="[data.trend > 0 ? 'table-danger' : '', 'table-success']" v-for="data in marketData" >
+                        <!-- <tr v-bind:class="['bg-danger': data.trend > 0]" v-for="data in marketData" > -->
+                        <!-- <tr v-for="data in marketData" class="bg-danger"> -->
+                          <td v-text="data.ticker"></td>
+                          <td v-text="data.price"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm"/>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -23,7 +44,7 @@ export default {
         this.websock = new WebSocket(wsuri);        this.websock.onmessage = this.websocketonmessage;        this.websock.onopen = this.websocketonopen;        this.websock.onerror = this.websocketonerror;        this.websock.onclose = this.websocketclose;
       },
       websocketonopen(){ //连接建立之后执行send方法发送数据
-        let actions = {"test":"12345"};        this.websocketsend(JSON.stringify(actions));
+        // let actions = {"test":"12345"};        this.websocketsend(JSON.stringify(actions));
       },
       websocketonerror(){//连接建立失败重连
         this.initWebSocket();
