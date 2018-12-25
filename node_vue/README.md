@@ -32,6 +32,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ## 说明
 这是一个vue前端项目示例，采用vue-cli创建，例子中用axois作RESTful跨域请求后端
 
+增加了一个WebSocket的例子
+
 ## 运行
 ```
 cnpm install

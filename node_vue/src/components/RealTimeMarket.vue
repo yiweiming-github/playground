@@ -9,9 +9,7 @@
                             <th>Ticker</th>
                             <th>Price</th>
                         </tr>
-                        <tr v-bind:class="[data.trend > 0 ? 'table-danger' : '', 'table-success']" v-for="data in marketData" >
-                        <!-- <tr v-bind:class="['bg-danger': data.trend > 0]" v-for="data in marketData" > -->
-                        <!-- <tr v-for="data in marketData" class="bg-danger"> -->
+                        <tr v-for="data in marketData" v-bind:class="[data.trend > 0 ? 'table-danger' : '', 'table-success']">
                           <td v-text="data.ticker"></td>
                           <td v-text="data.price"></td>
                         </tr>
@@ -41,7 +39,11 @@ export default {
     methods: {
       initWebSocket(){ //初始化weosocket
         const wsuri = "ws://localhost:8080/websocket/ticker";        
-        this.websock = new WebSocket(wsuri);        this.websock.onmessage = this.websocketonmessage;        this.websock.onopen = this.websocketonopen;        this.websock.onerror = this.websocketonerror;        this.websock.onclose = this.websocketclose;
+        this.websock = new WebSocket(wsuri);
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onopen = this.websocketonopen;
+        this.websock.onerror = this.websocketonerror;
+        this.websock.onclose = this.websocketclose;
       },
       websocketonopen(){ //连接建立之后执行send方法发送数据
         // let actions = {"test":"12345"};        this.websocketsend(JSON.stringify(actions));
