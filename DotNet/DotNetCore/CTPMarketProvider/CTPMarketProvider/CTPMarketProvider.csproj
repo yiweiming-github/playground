@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Redis" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="YieldChain.CTP">
+      <HintPath>..\libs\YieldChain.CTP.dll</HintPath>
+    </Reference>
+    <Reference Include="YieldChain.CTP.Resources">
+      <HintPath>..\libs\YieldChain.CTP.Resources.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(SolutionDir)\libs\ftdc*.dll .\bin\Debug\netcoreapp2.1&#xD;&#xA;xcopy $(SolutionDir)\libs\thost*.dll .\bin\Debug\netcoreapp2.1" />
+  </Target>
+
+</Project>
