@@ -10,7 +10,8 @@ namespace RP
     {
         static void Main(string[] args)
         {
-            var assets = FileDataReader.ReadAssetsFromFile("assets.csv");
+            //var assets = FileDataReader.ReadAssetsFromFile("assets.csv");
+            var assets = SinaApiReader.ReadAssetsFromSina();
 
             var portfolio = new Portfolio
             {
@@ -19,7 +20,8 @@ namespace RP
 
             RiskParityCalculator.CalculateRiskParityWeight(portfolio);
 
-            Console.ReadLine();
+            portfolio.ExportToCsv("exported_portfolio.csv");
+            Console.ReadLine();            
         }
     }
 }

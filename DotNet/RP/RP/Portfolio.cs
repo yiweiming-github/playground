@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,27 @@ namespace RP
             _netValues = CalculateNetValue(_values);
             _standardDeviation = CalculatePortfolioStd();
             Covs = CalculateAssetCovs();
+        }
+
+        public void ExportToCsv(string fileName)
+        {            
+            using (var wr = new StreamWriter(fileName))
+            {
+                var parts = new List<string>();                
+                Assets.ForEach(x => parts.Add("Asset value"));
+                Assets.ForEach(x => parts.Add("Asset net"));
+                parts.Add("Portfolio");
+                wr.WriteLine(string.Join(",", parts));
+
+                for (var i = 0; i < Values.Count; ++i)
+                {
+                    parts.Clear();                    
+                    Assets.ForEach(x => parts.Add(x.Values[i].ToString()));
+                    Assets.ForEach(x => parts.Add(x.NetValues[i].ToString()));
+                    parts.Add(NetValues[i].ToString());
+                    wr.WriteLine(string.Join(",", parts));
+                }
+            }
         }
 
         public List<Asset> Assets { get; set; }
