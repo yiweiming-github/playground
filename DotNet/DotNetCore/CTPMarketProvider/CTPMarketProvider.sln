@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTPMarketProvider", "CTPMarketProvider\CTPMarketProvider.csproj", "{6EF9C4CE-4F42-4886-99C9-58E90740E960}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTPMarketProvider", "CTPMarketProvider\CTPMarketProvider.csproj", "{6EF9C4CE-4F42-4886-99C9-58E90740E960}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTPMarketWebSocket", "CTPMarketWebSocket\CTPMarketWebSocket.csproj", "{22FFF11C-D37E-4888-BD19-F97387108306}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZmqTest", "ZmqTest\ZmqTest.csproj", "{BAA61B7A-13AE-481B-B6F4-50FC58F65CCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{6EF9C4CE-4F42-4886-99C9-58E90740E960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EF9C4CE-4F42-4886-99C9-58E90740E960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EF9C4CE-4F42-4886-99C9-58E90740E960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22FFF11C-D37E-4888-BD19-F97387108306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22FFF11C-D37E-4888-BD19-F97387108306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22FFF11C-D37E-4888-BD19-F97387108306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22FFF11C-D37E-4888-BD19-F97387108306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA61B7A-13AE-481B-B6F4-50FC58F65CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA61B7A-13AE-481B-B6F4-50FC58F65CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA61B7A-13AE-481B-B6F4-50FC58F65CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA61B7A-13AE-481B-B6F4-50FC58F65CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

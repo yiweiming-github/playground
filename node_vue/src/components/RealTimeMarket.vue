@@ -38,7 +38,7 @@ export default {
     },    
     methods: {
       initWebSocket(){ //初始化weosocket
-        const wsuri = "ws://localhost:8080/websocket/ticker";        
+        const wsuri = "ws://localhost:8080/websocket/ticker";
         this.websock = new WebSocket(wsuri);
         this.websock.onmessage = this.websocketonmessage;
         this.websock.onopen = this.websocketonopen;

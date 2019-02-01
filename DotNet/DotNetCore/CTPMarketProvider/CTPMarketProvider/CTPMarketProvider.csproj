@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ServiceStack.Redis" Version="5.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+    <PackageReference Include="NetMQ" Version="4.0.0.1" />
+    <PackageReference Include="Zaabee.AspNetCoreProtobuf" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

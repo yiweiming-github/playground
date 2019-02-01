@@ -1,6 +1,8 @@
 package com.example.demo3;
 
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +20,7 @@ public class MarketDataThread implements DisposableBean, Runnable {
         String message = "";
         StringBuilder strBuilder = new StringBuilder();
         while (_shouldRun) {
+
             long price = Math.round(4000.0 + Math.random()*20.0);
             int trend = Math.random() > 0.5 ? 1 : -1;
             strBuilder.delete(0, strBuilder.length());
@@ -34,7 +37,7 @@ public class MarketDataThread implements DisposableBean, Runnable {
             FutureMarketPriceWebSocketServer.Publish(message);
             System.out.println(message);
             try {
-                Thread.sleep(500);
+                Thread.sleep(2000);
             } catch (InterruptedException ex) {
                 continue;
             }
