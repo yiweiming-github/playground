@@ -9,7 +9,7 @@ namespace RP
 {
     public class RiskParityCalculator
     {
-        public static void CalculateRiskParityWeight(Portfolio portfolio, List<double> initialWeights = null, double resultStd = 0.0001, int maxIteration = 10000)
+        public static List<double> CalculateRiskParityWeight(Portfolio portfolio, List<double> initialWeights = null, double resultStd = 0.0001, int maxIteration = 10000)
         {
             var weights = initialWeights;
             if (weights == null)
@@ -56,6 +56,8 @@ namespace RP
             {
                 Console.WriteLine($"reach max iteration {maxIteration}");
             }
+
+            return weights;
         }
 
         private static List<double> CalculateRiskWeights(double portfolioStd, List<double> weights, List<double> covs)

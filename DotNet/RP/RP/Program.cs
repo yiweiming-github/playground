@@ -18,7 +18,9 @@ namespace RP
                 Assets = assets
             };
 
-            RiskParityCalculator.CalculateRiskParityWeight(portfolio);
+            var weights = RiskParityCalculator.CalculateRiskParityWeight(portfolio);
+            portfolio.Weights = weights;
+            portfolio.CalculateStatistics();
 
             portfolio.ExportToCsv("exported_portfolio.csv");
             Console.ReadLine();            

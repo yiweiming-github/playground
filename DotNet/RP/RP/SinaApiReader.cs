@@ -14,6 +14,7 @@ namespace RP
         private const string HS300_URL = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000300&scale=240&ma=5&datalen=499";
         private const string T0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/CffexFuturesService.getCffexFuturesDailyKLine?symbol=T0";
         private const string AU0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=AU0";
+        private const string RB0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=RB0";
 
         public static List<Asset> ReadAssetsFromSina()
         {
@@ -24,18 +25,22 @@ namespace RP
 
             response = RequestSinaApi(T0_URL);
             var t0Result = JsonConvert.DeserializeObject<string[][]>(response);
-            var assetT0 = CreateT0Asset(t0Result);
-            
+            var assetT0 = CreateT0Asset(t0Result);            
 
             response = RequestSinaApi(AU0_URL);
             var au0Result = JsonConvert.DeserializeObject<string[][]>(response);
             var assetAU0 = CreateT0Asset(au0Result);
-            
+
+            response = RequestSinaApi(RB0_URL);
+            var rb0Result = JsonConvert.DeserializeObject<string[][]>(response);
+            var assetRB0 = CreateT0Asset(rb0Result);
+
             var assets = new List<Asset>
             {
                 assetHs300,
                 assetT0,
-                assetAU0
+                assetAU0,
+                assetRB0
             };
 
             assets = AlignDataLength(assets);
