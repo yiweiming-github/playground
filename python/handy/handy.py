@@ -2,6 +2,8 @@ import sys
 import markdown
 import codecs
 from optparse import OptionParser
+import requests
+import json
 
 # A tool of http test
 def tool_http_usage():
@@ -9,12 +11,36 @@ def tool_http_usage():
 '''
 python handy.py http -u {url} -x [POST|GET] [-d|-f] [data or json file name]")
 samples:
-python handy.py http -u http://localhost:8081/test -x POST -d '{"name": "John"}'
 python handy.py http -u http://localhost:8081/test -x POST -f input.json
 ''')
 
 def tool_http(args):
-    tool_http_usage()
+    parser = OptionParser()
+    parser.add_option("-u", "--url", dest="url", help="http url")
+    parser.add_option("-x", "--action", dest="action", help="http action, GET or POST")    
+    parser.add_option("-f", "--file", dest="json_file", help="file name of json data")
+    (options, args) = parser.parse_args(args)
+
+    if not options.url:
+        tool_http_usage()
+    else:
+        isGet = True
+        if options.action and options.action == "POST":
+            isGet = False
+        
+        if isGet:
+            response = requests.get(options.url)
+            print(response)
+        else:
+            if options.json_file:
+                input_file = codecs.open(options.json_file, mode="r", encoding="utf-8")
+                data = input_file.read()
+            else:
+                tool_http_usage()
+                return
+            header = {'Content-Type': 'application/json'}
+            response = requests.post(options.url, json=json.loads(data), headers=header)
+            print(response.json())
 
 def tool_ping_usage():
     print(
