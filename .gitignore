@@ -5,3 +5,12 @@ dist
 bower_components
 logs
 OpenFinRVM.exe
+/DotNet/DotNetCore/CTPMarketProvider/.vs
+/DotNet/DotNetCore/CTPMarketProvider/CTPMarketWebSocket/bin/Debug/netcoreapp2.1
+/DotNet/DotNetCore/CTPMarketProvider/CTPMarketWebSocket/obj
+/DotNet/DotNetCore/CTPMarketProvider/ZmqTest/bin/Debug/netcoreapp2.1
+/DotNet/DotNetCore/CTPMarketProvider/ZmqTest/obj
+/DotNet/RP/.vs/RP
+/DotNet/RP/RP/bin/Debug
+/DotNet/RP/RP/obj/Debug
+/DotNet/RP/packages

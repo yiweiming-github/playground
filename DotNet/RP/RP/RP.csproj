@@ -56,7 +56,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RiskParityCalculator.cs" />
+    <Compile Include="SimpleTradingSimulator.cs" />
     <Compile Include="SinaApiReader.cs" />
+    <Compile Include="Strategy\CandleBar.cs" />
+    <Compile Include="Strategy\FutureStrategyBase.cs" />
+    <Compile Include="Strategy\InputHelper.cs" />
+    <Compile Include="Strategy\SimpleHighLowStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -64,6 +69,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RB00_market.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -12,36 +12,25 @@ namespace RP
     public class SinaApiReader
     {
         private const string HS300_URL = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000300&scale=240&ma=5&datalen=499";
-        private const string T0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/CffexFuturesService.getCffexFuturesDailyKLine?symbol=T0";
-        private const string AU0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=AU0";
-        private const string RB0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=RB0";
+        private const string H50_URL = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000016&scale=240&ma=5&datalen=499";
+        private const string SZ399006_URL = "http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sz399006&scale=240&ma=5&datalen=499";
+        //private const string T0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/CffexFuturesService.getCffexFuturesDailyKLine?symbol=T0";
+        //private const string AU0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=AU0";
+        //private const string RB0_URL = "http://stock2.finance.sina.com.cn/futures/api/json.php/IndexService.getInnerFuturesDailyKLine?symbol=RB0";
 
         public static List<Asset> ReadAssetsFromSina()
         {
-            var response = RequestSinaApi(HS300_URL);
-            var hs300Result = JsonConvert.DeserializeObject<List<SinaHs300Result>>(response);
-            var assetHs300 = CreateHs300Asset(hs300Result);
-            
+            string[] urls = { HS300_URL, H50_URL, SZ399006_URL };
+            //string[] urls = { H50_URL, SZ399006_URL };
+            var assets = new List<Asset>();
 
-            response = RequestSinaApi(T0_URL);
-            var t0Result = JsonConvert.DeserializeObject<string[][]>(response);
-            var assetT0 = CreateT0Asset(t0Result);            
-
-            response = RequestSinaApi(AU0_URL);
-            var au0Result = JsonConvert.DeserializeObject<string[][]>(response);
-            var assetAU0 = CreateT0Asset(au0Result);
-
-            response = RequestSinaApi(RB0_URL);
-            var rb0Result = JsonConvert.DeserializeObject<string[][]>(response);
-            var assetRB0 = CreateT0Asset(rb0Result);
-
-            var assets = new List<Asset>
+            foreach (var url in urls)
             {
-                assetHs300,
-                assetT0,
-                assetAU0,
-                assetRB0
-            };
+                var response = RequestSinaApi(url);
+                var result = JsonConvert.DeserializeObject<List<SinaStockResult>>(response);
+                var asset = CreateStockAsset(result);
+                assets.Add(asset);
+            }
 
             assets = AlignDataLength(assets);
 
@@ -70,7 +59,7 @@ namespace RP
             return ret;
         }
 
-        private static Asset CreateHs300Asset(List<SinaHs300Result> result)
+        private static Asset CreateStockAsset(List<SinaStockResult> result)
         {
             return new Asset
             {
@@ -101,7 +90,7 @@ namespace RP
     }
 
     [Serializable]
-    public class SinaHs300Result
+    public class SinaStockResult
     {
         public string day;
         public double open;

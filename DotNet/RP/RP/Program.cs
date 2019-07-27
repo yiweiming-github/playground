@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP.Strategy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,12 @@ namespace RP
     class Program
     {
         static void Main(string[] args)
+        {
+            FuturesSimpleStrateyTest();
+            Console.ReadLine();            
+        }
+
+        static void RiskParityTest()
         {
             //var assets = FileDataReader.ReadAssetsFromFile("assets.csv");
             var assets = SinaApiReader.ReadAssetsFromSina();
@@ -23,7 +30,16 @@ namespace RP
             portfolio.CalculateStatistics();
 
             portfolio.ExportToCsv("exported_portfolio.csv");
-            Console.ReadLine();            
+        }
+
+        static void FuturesSimpleStrateyTest()
+        {
+            var bars = InputHelper.ReadFuturesDataFromSinaExportFile("RB00_market.txt");
+            var strategy = new SimpleHighLowStrategy(10, 5, 20, 10, SimpleHighLowTradeType.Both, HighLowType.Abs);
+            strategy.Run(5000, bars);
+
+            strategy.OutputValueSequence("net_value.txt");
+            strategy.OutputActions("buy_sell_actions.txt");
         }
     }
 }

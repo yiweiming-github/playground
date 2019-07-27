@@ -96,7 +96,7 @@ previewmd - generate preview from Markdown file
 ''')
 
 def main(args):
-    if args[0] in function_dict:
+    if len(args) > 0 and args[0] in function_dict:
         function_dict[args[0]](args[1:])
     else:
         usage()
