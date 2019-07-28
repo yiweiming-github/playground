@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\VolAnalyzer.cs" />
     <Compile Include="Asset.cs" />
     <Compile Include="FileDataReader.cs" />
     <Compile Include="Portfolio.cs" />
